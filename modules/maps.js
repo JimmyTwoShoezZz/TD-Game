@@ -1,11 +1,25 @@
-// Tile colors based on type
+export const TILE_TYPES = {
+    GRASS: { id: 0, name: "Grass", buildable: true, passable: true },
+    PATH: { id: 1, name: "Path", buildable: false, passable: true },
+    SPAWN: { id: 2, name: "Spawn Point", buildable: false, passable: true },
+    FINISH: { id: 3, name: "Finish Point", buildable: false, passable: true },
+    WATER: { id: 4, name: "Water", buildable: false, passable: false },
+    MINERAL_NODE: { id: 5, name: "Mineral Node", buildable: true, passable: false, extractable: true },
+    ROCK: { id: 6, name: "Rock", buildable: false, passable: false }
+};
+
+export function getTileType(tileId) {
+    return Object.values(TILE_TYPES).find(tile => tile.id === tileId);
+}
+
 const TILE_COLORS = {
-    0: "#4CAF50", // Open Buildable Area (Green)
+    0: "#4CAF50", // Grass (Green)
     1: "#8B4513", // Enemy Path (Brown)
     2: "#FF8C00", // Spawn Point (Orange)
     3: "#FF4500", // Finish Point (Red)
-    4: "#808080", // Terrain Blocker (Gray)
-    5: "#1E90FF"  // Water (Blue)
+    4: "#1E90FF", // Water (Blue)
+    5: "#FFF555", // Mineral Node (Pink)
+    6: "#808080"  // Rock (Grey)
 };
 
 // Tile size
@@ -46,13 +60,8 @@ export function renderMap() {
     }
 }
 
-// Tiles where towers can be placed
-const BUILDABLE_TILES = [0]; // Open areas only
-
 // Function to check if a tile is buildable
 export function isTileBuildable(row, col) {
-    if (row < 0 || col < 0 || row >= MAP_GRID.length || col >= MAP_GRID[0].length) {
-        return false; // Out of bounds
-    }
-    return BUILDABLE_TILES.includes(MAP_GRID[row][col]);
+    const tile = getTileType(MAP_GRID[row][col]);
+    return tile ? tile.buildable : false;
 }
