@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     placeTower(5, 3);
 });
 
-import { initializeDefaultMenu } from "./ui.js";
+import { initializeDefaultMenu, updateCommandPanel, openBuildTowerMenu } from "./ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Game Initialized");

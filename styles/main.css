@@ -150,6 +150,6 @@ body {
     pointer-events: none;
 }
 
-#command-panel .command-grid .command-button:hover {
+.command-button:hover {
     background: #777;
 }
