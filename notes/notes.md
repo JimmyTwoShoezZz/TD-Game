@@ -37,7 +37,7 @@ On easy and normal difficulty, I want the player to have no time limit between r
     Desert Planet:
     Swamp Planet:
     Frozen Planet:
-    Twilight Planet:
+    Twilight Planet: I also want one of the unique parts of the crystal map to be terrain blockers that act like weaker versions of the tower we just created. That way it gives a taste of the tower to come, and adds a story element to how the player can harness the crystal’s powers. The formations should affect all towers like the unlockable tower will
     Space Platform:
     I want visual changes as well as gameplay changes! The gravity and storm ideas are great! Also, depending on the planet, the enemies would either be human or alien or both
     random path generation? random map generation all together? preset pieces that fit together?
@@ -96,6 +96,20 @@ Shotgun Tower
     Let’s add a shotgun tower. Shoots lots of projectiles at once in the general direction of enemies, but has a short time between shots that it can’t fire
     Reduce cool down time, increase damage, increase bullet spread
     ground only
+Flamethrower Tower (Updated Mechanics)
+✔ Short-range continuous AoE damage (fires a stream of flames).
+✔ Highly effective against alien enemies (deals bonus damage or ignores alien resistance).
+✔ Leaves behind burning ground in the affected area:
+
+Deals small DoT (Damage over Time) to enemies that walk over it.
+Burning effect lingers for a while before disappearing.
+The effect does NOT stack, so additional flame attacks reset the burn duration instead of increasing damage.
+✔ Upgrades:
+Increased main attack damage.
+Wider flame spread.
+Longer burning ground duration.
+✔ Targets: Ground enemies only.
+
 Artillery Tower
     I want to add an artillery tower that can only attack ground units
     It should start with a long range and deal splash damage. It’s upgrades will include increased aoe radius and increased damage
@@ -113,6 +127,7 @@ Rail Gun Tower
     I think they should have a limit per round but I don’t know what it is, perhaps there would be an upgrade to increase the distance
 Unnamed Tower
     I want to add a tower that is single target and slows the enemy’s movement speed
+
 Revised Magnet Tower – Creates temporary attraction points on enemies
 Core Functionality:
 Fires a magnet projectile that attaches to a metal-based enemy (vehicles, robots, mechs).
@@ -132,6 +147,7 @@ Strategy & Role:
 Great for disrupting enemy formations, forcing metal-based units to cluster together.
 Synergizes with AoE towers (Shotgun, Artillery, EMP Mines) by grouping enemies for maximum splash damage.
 Can be used offensively to pull enemies into kill zones or defensively to delay key units.
+
 Corrosion Tower Mechanics (Finalized):
 Effect: First hit permanently reduces enemy armor in an AoE explosion (no stacking).
 Damage Type: Low direct damage, mainly focused on weakening armor.
@@ -142,6 +158,7 @@ Visual Effect: A quick burst of corrosive material rather than a lasting cloud.
 Synergy: Softens up tanky alien units so other towers deal more damage.
 Upgrades:
 Stronger Acid Formula – Increases the amount of armor removed.
+
 Final Anti-Air Missile Tower Design:
 Function: Fires guided missiles at air units with a decent attack speed and medium damage.
 Strong Against: All air units.
@@ -151,6 +168,7 @@ Attack Type: Single-target homing missiles with no splash damage.
 Upgrades:
 Multi-Target Tracking – Allows the tower to lock onto two air units at once, firing at both.
 Faster Targeting Systems – Reduces the time between missile launches, increasing attack speed.
+
 Resource Extractor Tower (Late-Game Tower)
 Overview:
 A late-game tower that generates Minerals and Power Crystals.
@@ -171,6 +189,7 @@ Balance Considerations:
 Provides a strong economic advantage, but requires sacrificing a tower slot.
 Its placement is limited to mineral-rich tiles, making positioning strategic.
 Vulnerable to enemy attacks, particularly during boss waves when towers can be destroyed.
+
 I want an energy crystal tower. It doesn’t have an active attack, but it buffs other  towers damage, attack speed, and cooldowns for abilities. It would be a late game tower, expensive to unlock
 
     If the tower has the ability to move, like the artillery or rail gun, I want a button that puts the player into movement mode
@@ -184,6 +203,7 @@ The Rail Gun Tower will stay as a single-target, high-damage, armor-piercing opt
 The decision will be based on enemy composition hints in the map description—favoring Artillery for groups of lighter units and Rail Gun for heavy, armored enemies.
 Also, the rail gun and artillery should be combined in the same way we combined the shotgun and flamethrower
 I’d like to set a game constraint so that it’s only possible to build towers between rounds, not during the waves
+I want an energy crystal tower. It doesn’t have an active attack, but it buffs other  towers damage, attack speed, and cooldowns for abilities. It would be a late game tower, expensive to unlock
 
 **Enemies / Abilities**
 Human Ground Units
@@ -278,3 +298,60 @@ Weaknesses: Extremely slow, massive target, weak to concentrated anti-air fire.
     The armor upgrades will be global, other tower upgrades will be individual
     I think all towers will start with 1 Armor and each global upgrade will add +1 Armor
     Oh wait, I meant all towers will have at least 1 base armor. The more advanced towers will have different amounts to help balance their strength of damage or abilities
+
+**Campaign**
+Branching Path (Semi-Open Campaign)
+Players start on a central hub and can choose between multiple planets.
+Example: After beating the first planet, they can pick between two or three others, leading to different paths.
+Number 2 sounds like what I want for the campaign which is what I want to code first. Once the game is fully running I want to add a Time Attack mode, which is just “pick a planet, try to beat it as quick as possible.” This game mode would have a separate leaderboard from the campaign
+Yeah, for time attack all towers would be unlocked and all tower abilities would be researched and ready to use. Players would still need to start from the beginning concerning upgrades that have multiple tiers, like the global armor
+Yeah I think I want all upgrades and research to carry over from one level to the next. This way there’s a good feeling of progression and the enemies can also scale in difficulty to remain challenging. Each planets terrain and effects also increase the need for strategy
+At the end of every level, after the final wave A mega boss appears that is scripted to be unbeatable, there by driving the player from the planet, forcing them to defend the next one in the progression. As the player continues to see this mega boss on each planet, it gets stronger and gains more abilities. Then, on the final space platform level, we meet the boss for the final showdown 
+1️⃣ Grassy Plains (Starting Planet) 🌿
+
+Balanced terrain, perfect for learning mechanics.
+First encounter with the Mega Boss—players realize they can’t win yet.
+2️⃣ Frozen Wasteland ❄️
+
+Snowstorms & ice slow down towers and enemies.
+The Mega Boss now has a shield, reinforcing its evolution.
+3️⃣ Crystal Twilight Planet 💎
+
+Energy-rich but dangerous—crystal formations block buildable space.
+Crystal towers amplify certain attacks, but some enemies absorb energy.
+The Mega Boss starts summoning elite enemies, making the battle tougher.
+4️⃣ Scorching Red Desert 🌅
+
+Extreme heat affects tower cooldowns (potential overheating mechanic?).
+Sandstorms randomly reduce tower accuracy.
+The Mega Boss destroys random towers before appearing, forcing emergency repositioning.
+5️⃣ Swamp Hellscape 🦠
+
+Very limited buildable space, making tower placement highly strategic.
+Mud slows enemies, but water-resistant units ignore it.
+The Mega Boss now actively attacks the player’s defenses, increasing the urgency to retreat faster.
+6️⃣ Volcanic Death World 🌋
+
+Lava flows destroy towers, making survival a constant challenge.
+Ash clouds obscure vision, affecting most towers.
+The Mega Boss starts attacking during the final waves, rather than just appearing afterward.
+7️⃣ Final Showdown: Orbital Defense Platform 🛰️
+
+No terrain-based obstacles—just raw tower defense strategy.
+Mega Boss reaches full power.
+The final fight is multi-phase, testing everything the player has learned.
+No retreat. No running. The final stand.
+
+Yeah let’s do that. Add to my campaign story notes that the humans that the player faces are rebels who want the aliens to take over or something like that, all other humans are trying to defeat the aliens, this explains why the player faces humans early on. The human enemies in the early campaign are rebels—a faction that believes the aliens should take over and fights against the rest of humanity.
+✔ The player represents the last line of defense for Earth and its allied forces.
+✔ Why do the rebels support the aliens?
+
+They believe humanity is doomed and that resistance is futile.
+They think the aliens will spare them if they help overthrow Earth’s defenses.
+Some may even be enhanced or brainwashed by alien technology.
+✔ This justifies why the player fights human enemies first before transitioning to full alien waves.
+✔ As the campaign progresses, the aliens begin taking over, and the rebels become less relevant as the true war unfolds.
+Early waves focus on human rebels, meaning bullets & shrapnel (Machine Gun, Shotgun) are effective early on.
+As the alien threat grows, the Flamethrower Tower becomes more valuable, and players need to adapt their tower choices.
+The player’s goal is to hold off both the rebels and the alien invasion, leading to the final battle on the Orbital Defense Platform.
+\Nope, but it gives me an idea, maybe later in the campaign the aliens create hybrid or brainwashed humans like you mentioned so the player has to fight them again on the final platform level
