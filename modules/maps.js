@@ -12,14 +12,14 @@ export function getTileType(tileId) {
     return Object.values(TILE_TYPES).find(tile => tile.id === tileId);
 }
 
-const TILE_COLORS = {
-    0: "#4CAF50", // Grass (Green)
-    1: "#8B4513", // Enemy Path (Brown)
-    2: "#FF8C00", // Spawn Point (Orange)
-    3: "#FF4500", // Finish Point (Red)
-    4: "#1E90FF", // Water (Blue)
-    5: "#FFF555", // Mineral Node (Pink)
-    6: "#808080"  // Rock (Grey)
+const tileColors = {
+    [TILE_TYPES.GRASS.id]: "#4CAF50", // (Green)
+    [TILE_TYPES.PATH.id]: "#8B4513", // (Brown)
+    [TILE_TYPES.SPAWN.id]: "#FF8C00", // (Orange)
+    [TILE_TYPES.FINISH.id]: "#FF4500", // (Red)
+    [TILE_TYPES.WATER.id]: "#1E90FF", // (Blue)
+    [TILE_TYPES.MINERAL_NODE.id]: "#FFAAAA", // (Pink)
+    [TILE_TYPES.ROCK.id]: "#808080"  // (Grey)
 };
 
 // Tile size
@@ -52,7 +52,7 @@ export function renderMap() {
     for (let row = 0; row < MAP_GRID.length; row++) {
         for (let col = 0; col < MAP_GRID[row].length; col++) {
             let tileType = MAP_GRID[row][col];
-            ctx.fillStyle = TILE_COLORS[tileType] || "#000"; // Default to black if undefined
+            ctx.fillStyle = tileColors[tileType] || "#000"; // Default to black if undefined
             ctx.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             ctx.strokeStyle = "#222"; // Grid lines
             ctx.strokeRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);

@@ -17,3 +17,7 @@ document.addEventListener("click", (event) => {
         }
     }
 });
+
+export function getTowerById() {
+    console.log("test")
+}

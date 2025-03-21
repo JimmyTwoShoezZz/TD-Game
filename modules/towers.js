@@ -11,10 +11,19 @@ export function placeTower(row, col) {
     return true;
 }
 
+export function selectTower() {
+    
+}
+
 export function enterRepairMode() {
     isRepairMode = true
     console.log("🔧 Entering Repair Mode - Click a tower to repair.");
     // Future: Set a flag that allows the player to select a tower for repair
+}
+
+export function repairTower() {
+    console.log("🔧 Repairing all towers...");
+    // Future: Loop through all towers and repair them
 }
 
 export function repairAllTowers() {

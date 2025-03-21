@@ -7,7 +7,7 @@ import {
 // Tower, Enemy, and Global Abilities
 import {
 
-} from "./abilites.js"
+} from "./abilities.js"
 
 // Towers and Mechanics
 import {
@@ -15,7 +15,6 @@ import {
     enterRepairMode,
     repairTower,
     repairAllTowers,
-    enterDeleteMode,
     deleteTower
 } from "./towers.js";
 

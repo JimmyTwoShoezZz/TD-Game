@@ -1,4 +1,4 @@
-import { deleteTower } from "./towers.js"; // ✅ Needed for confirming tower deletion
+import { deleteTower, repairTower, repairAllTowers, enterRepairMode, selectTower } from "./towers.js"; // ✅ Needed for confirming tower deletion
 import { getTowerById } from "./game.js"; // ✅ Needed for selecting towers
 
 export function initializeDefaultMenu() {
@@ -96,6 +96,8 @@ export function openRepairTowerMenu(page = 1) {
         { id: "btn-12", label: "Cancel", action: initializeDefaultMenu }
     ]);
 }
+
+let selectedTower = null;
 
 export function openDeleteTowerMenu() {
     console.log("🗑️ Entering Delete Mode - Select a tower to delete.");
