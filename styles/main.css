@@ -30,6 +30,37 @@ body {
     padding: 0 20px;
 }
 
+#resources {
+    display: flex;
+    position: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#wave-info {
+    display: flex;
+    position: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#buttons button {
+    align-items: center;
+    justify-content: center;
+    width: 110px;
+    background: #555;
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #777;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+#buttons button:hover {
+    background: #777;
+}
+
 #game-container {
     position: absolute;
     top: 60px;

@@ -1,9 +1,9 @@
-import { deleteTower, repairTower, repairAllTowers, enterRepairMode, selectTower } from "./towers.js" // ✅ Needed for confirming tower deletion
+import { deleteTower, repairTower, repairAllTowers, enterRepairMode, selectTower } from "./towers.js"
 
 export function initializeDefaultMenu() {
     updateCommandPanel([
         { id: "btn-1", label: "Build Tower", action: () => openBuildTowerMenu(1) },
-        { id: "btn-2", label: "Repair Tower", action: () => openRepairTowerMenu(1) },
+        { id: "btn-2", label: "Repair Tower", action: openRepairTowerMenu },
         { id: "btn-3", label: "Delete Tower", action: openDeleteTowerMenu },
         { id: "btn-4", label: "Global Upgrades", action: openGlobalUpgradesMenu },
         { id: "btn-5", label: "Tower Research", action: openTowerResearchMenu },
@@ -11,9 +11,9 @@ export function initializeDefaultMenu() {
         { id: "btn-7", label: "", action: null },
         { id: "btn-8", label: "", action: null },
         { id: "btn-9", label: "", action: null },
-        { id: "btn-10", label: "Next Wave", action: startNextWave },
+        { id: "btn-10", label: "", action: null },
         { id: "btn-11", label: "", action: null },
-        { id: "btn-12", label: "Settings", action: openSettingsMenu }
+        { id: "btn-12", label: "Next Wave", action: startNextWave }
     ])
 }
 
@@ -22,8 +22,8 @@ export function updateCommandPanel(options) {
     panel.innerHTML = ""
 
     options.forEach(option => {
-        const button = document.createElement("button");
-        button.classList.add("command-button");
+        const button = document.createElement("button")
+        button.classList.add("command-button")
         button.id = option.id
         button.textContent = option.label
         if (option.action) {
@@ -59,55 +59,54 @@ export function openBuildTowerMenu(page = 1) {
             { id: "btn-8", label: "", action: null },
             { id: "btn-9", label: "", action: null }
         ]
-    };
-
-    const hasPreviousPage = page > 1;
-    const hasNextPage = page < Object.keys(towerPages).length;
+    }
+    const hasPreviousPage = page > 1
+    const hasNextPage = page < Object.keys(towerPages).length
     updateCommandPanel([
         ...towerPages[page],
         { id: "btn-10", label: hasPreviousPage ? "←" : "", action: hasPreviousPage ? () => openBuildTowerMenu(page - 1) : null },
         { id: "btn-11", label: hasNextPage ? "→" : "", action: hasNextPage ? () => openBuildTowerMenu(page + 1) : null },
         { id: "btn-12", label: "Cancel", action: initializeDefaultMenu }
-    ]);
+    ])
 }
 
-export function openRepairTowerMenu(page = 1) {
-    const repairPages = {
-        1: [
-            { id: "btn-1", label: "Repair Tower", action: enterRepairMode },
-            { id: "btn-2", label: "Repair All Towers", action: repairAllTowers },
-            { id: "btn-3", label: "", action: null },
-            { id: "btn-4", label: "", action: null },
-            { id: "btn-5", label: "", action: null },
-            { id: "btn-6", label: "", action: null },
-            { id: "btn-7", label: "", action: null },
-            { id: "btn-8", label: "", action: null },
-            { id: "btn-9", label: "", action: null },
-        ]
-    };
-
-    const hasPreviousPage = page > 1;
-    const hasNextPage = page < Object.keys(repairPages).length;
+export function openRepairTowerMenu() {
     updateCommandPanel([
-        ...repairPages[page],
-        { id: "btn-10", label: hasPreviousPage ? "←" : "", action: hasPreviousPage ? () => openRepairTowerMenu(page - 1) : null },
-        { id: "btn-11", label: hasNextPage ? "→" : "", action: hasNextPage ? () => openRepairTowerMenu(page + 1) : null },
+        { id: "btn-1", label: "Repair Tower", action: enterRepairMode },
+        { id: "btn-2", label: "Repair All Towers", action: repairAllTowers },
+        { id: "btn-3", label: "", action: null },
+        { id: "btn-4", label: "", action: null },
+        { id: "btn-5", label: "", action: null },
+        { id: "btn-6", label: "", action: null },
+        { id: "btn-7", label: "", action: null },
+        { id: "btn-8", label: "", action: null },
+        { id: "btn-9", label: "", action: null },
+        { id: "btn-10", label: "", action: null },
+        { id: "btn-11", label: "", action: null },
         { id: "btn-12", label: "Cancel", action: initializeDefaultMenu }
-    ]);
+    ])
 }
 
 let selectedTower = null;
 
 export function openDeleteTowerMenu() {
-    console.log("🗑️ Entering Delete Mode - Select a tower to delete.");
-
-    isDeleteMode = true;
-    selectedTower = null; // Reset selection
+    isDeleteMode = true
+    selectedTower = null // Reset selection
 
     updateCommandPanel([
-        { id: "btn-1", label: "Confirm Deletion", action: confirmDeleteTower, disabled: true }, // Starts disabled
+        { id: "btn-1", label: "Confirm", action: confirmDeleteTower, disabled: true }, // Starts disabled
+        { id: "btn-2", label: "", action: null },
+        { id: "btn-3", label: "", action: null },
+        { id: "btn-4", label: "", action: null },
+        { id: "btn-5", label: "", action: null },
+        { id: "btn-6", label: "", action: null },
+        { id: "btn-7", label: "", action: null },
+        { id: "btn-8", label: "", action: null },
+        { id: "btn-9", label: "", action: null },
+        { id: "btn-10", label: "", action: null },
+        { id: "btn-11", label: "", action: null },
         { id: "btn-12", label: "Cancel", action: cancelDeleteMode } // Always cancels delete mode
-    ]);
+    ])
 }
 
 export function updateDeleteMenu() {
@@ -118,11 +117,9 @@ export function updateDeleteMenu() {
 }
 
 function cancelDeleteMode() {
-    console.log("❌ Canceling Delete Mode.");
-    isDeleteMode = false;
-    selectedTower = null;
-
-    initializeDefaultMenu(); // ✅ Return to default command menu
+    isDeleteMode = false
+    selectedTower = null
+    initializeDefaultMenu()
 }
 
 function confirmDeleteTower() {

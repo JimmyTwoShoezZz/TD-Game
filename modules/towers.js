@@ -1,4 +1,6 @@
-import { isTileBuildable } from "./maps.js";
+import { isTileBuildable } from "./maps.js"
+
+
 
 // Function to place a tower at a specific location
 export function placeTower(row, col) {
