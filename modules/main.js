@@ -19,12 +19,13 @@ import {
 
 // Enemies and their mechanics
 import {
-
+    Enemy
 } from "./enemies.js"
 
 // Game logic
 import {
-
+    enemies,
+    spawnEnemy
 } from "./game.js"
 
 //Handles player actions
@@ -64,7 +65,6 @@ import {
 
 // Towers and their mechanics
 import {
-    placeTower,
     enterRepairMode,
     repairTower,
     repairAllTowers,
@@ -81,20 +81,52 @@ import {
     updateDeleteMenu
 } from "./ui.js"
 
-
-
-
+const canvas = document.getElementById("game-canvas")
+const ctx = canvas.getContext("2d")
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Game initialized")
-
-    // Load the default menu
     initializeDefaultMenu()
-})
-
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Map rendered")
-
-    // Render the map on screen
     renderMap()
+    spawnEnemy()
+    requestAnimationFrame(gameLoop)
 })
+
+let lastTime = performance.now()
+
+function gameLoop(currentTime) {
+    const deltaTime = (currentTime - lastTime) / 1000
+    lastTime = currentTime
+  
+    // === UPDATE ===
+    console.log("Enemies array:", enemies)
+    for (const enemy of enemies) {
+        console.log(`Looping enemy: ${enemy.name}, alive: ${enemy.alive}`)
+        if (enemy.alive) {
+            enemy.update(currentTime, deltaTime)
+        }
+    }
+  
+    // === RENDER ===
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    renderMap()
+
+    for (const enemy of enemies) {
+        if (!enemy.alive) continue
+    
+        ctx.beginPath()
+        ctx.arc(
+        enemy.x * 50 + 25,
+        enemy.y * 50 + 25,
+        15,
+        0,
+        2 * Math.PI
+        )
+        ctx.fillStyle = enemy.isAir ? '#00BFFF' : '#FF0000'
+        ctx.fill()
+        ctx.strokeStyle = '#000'
+        ctx.stroke()
+    }
+
+    // Loop again
+    requestAnimationFrame(gameLoop)
+}

@@ -204,6 +204,14 @@ The decision will be based on enemy composition hints in the map description—f
 Also, the rail gun and artillery should be combined in the same way we combined the shotgun and flamethrower
 I’d like to set a game constraint so that it’s only possible to build towers between rounds, not during the waves
 I want an energy crystal tower. It doesn’t have an active attack, but it buffs other  towers damage, attack speed, and cooldowns for abilities. It would be a late game tower, expensive to unlock
+💡 Targeting Logic Ideas (per tower)
+Targeting Mode	Description
+Closest (default)	Targets the enemy closest to the tower.
+Farthest Along Path	Targets the enemy closest to escaping (end of path). Great for panic-mode towers.
+Lowest Health	Finishes off weak enemies. Good for fast-firing towers.
+Highest Health	Focuses fire on tanks. Useful for heavy damage towers.
+Lowest Armor	Shreds soft targets. Pairs well with rapid fire.
+Cloaked Only	Targets stealth units if the tower has detection.
 
 **Enemies / Abilities**
 Human Ground Units

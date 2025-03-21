@@ -60,6 +60,25 @@ export function renderMap() {
     }
 }
 
+export function generateEnemyPath() {
+    const path = []
+    for (let row = 0; row < MAP_GRID.length; row++) {
+        for (let col = 0; col < MAP_GRID[row].length; col++) {
+            const tileId = MAP_GRID[row][col]
+            if (
+                tileId === TILE_TYPES.SPAWN.id ||
+                tileId === TILE_TYPES.PATH.id ||
+                tileId === TILE_TYPES.FINISH.id
+            ) {
+                path.push({ x: col, y: row })
+            }
+        }
+    }
+    // Sort left to right since all path tiles are in row 2
+    path.sort((a, b) => a.x - b.x)
+    return path
+}
+
 // Function to check if a tile is buildable
 export function isTileBuildable(row, col) {
     const tile = getTileType(MAP_GRID[row][col]);
