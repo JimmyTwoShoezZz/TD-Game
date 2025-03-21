@@ -1,5 +1,4 @@
-import { deleteTower, repairTower, repairAllTowers, enterRepairMode, selectTower } from "./towers.js"; // ✅ Needed for confirming tower deletion
-import { getTowerById } from "./game.js"; // ✅ Needed for selecting towers
+import { deleteTower, repairTower, repairAllTowers, enterRepairMode, selectTower } from "./towers.js" // ✅ Needed for confirming tower deletion
 
 export function initializeDefaultMenu() {
     updateCommandPanel([
@@ -15,25 +14,25 @@ export function initializeDefaultMenu() {
         { id: "btn-10", label: "Next Wave", action: startNextWave },
         { id: "btn-11", label: "", action: null },
         { id: "btn-12", label: "Settings", action: openSettingsMenu }
-    ]);
+    ])
 }
 
 export function updateCommandPanel(options) {
-    const panel = document.querySelector(".command-grid");
-    panel.innerHTML = "";
+    const panel = document.querySelector(".command-grid")
+    panel.innerHTML = ""
 
     options.forEach(option => {
         const button = document.createElement("button");
         button.classList.add("command-button");
-        button.id = option.id;
-        button.textContent = option.label;
+        button.id = option.id
+        button.textContent = option.label
         if (option.action) {
-            button.addEventListener("click", option.action);
+            button.addEventListener("click", option.action)
         } else {
-            button.classList.add("empty-button");
+            button.classList.add("empty-button")
         }
-        panel.appendChild(button);
-    });
+        panel.appendChild(button)
+    })
 }
 
 export function openBuildTowerMenu(page = 1) {

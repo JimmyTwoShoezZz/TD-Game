@@ -1,37 +1,75 @@
+// main.js
+// Controls all aspects of the program
 
-// Game Logic
-import {
-    getTowerById
-} from "./game.js";
-
-// Tower, Enemy, and Global Abilities
+// IMPORTS
+// Tower, enemy, and global abilities
 import {
 
 } from "./abilities.js"
 
-// Towers and Mechanics
+// Collision detection between enemies and projectiles
+import {
+
+} from "./collision.js"
+
+// Game settings
+import {
+
+} from "./config.js"
+
+// Enemies and their mechanics
+import {
+
+} from "./enemies.js"
+
+// Game logic
+import {
+
+} from "./game.js"
+
+//Handles player actions
+import {
+
+} from "./handlers.js"
+
+// Images
+import {
+
+} from "./images.js"
+
+// Maps and generation
+import {
+    renderMap
+} from "./maps.js"
+
+// Enemy pathfinding logic
+import {
+
+} from "./pathfinding.js"
+
+// Projectiles
+import {
+
+} from "./projectiles.js"
+
+// Sounds
+import {
+
+} from "./sounds.js"
+
+// Tooltips
+import {
+
+} from "./tooltips.js"
+
+// Towers and their mechanics
 import {
     placeTower,
     enterRepairMode,
     repairTower,
     repairAllTowers,
     deleteTower
-} from "./towers.js";
-
-// Enemies and Mechanics
-import {
-
-} from "./enemies.js"
-
-// Pathfinding
-import {
-
-} from "./pathfinding.js"
-
-// Map Handling
-import {
-    renderMap
-} from "./maps.js";
+} from "./towers.js"
 
 // UI and Menus
 import {
@@ -41,49 +79,22 @@ import {
     openRepairTowerMenu,
     openDeleteTowerMenu,
     updateDeleteMenu
-} from "./ui.js";
-
-// Tooltips
-import {
-
-} from "./tooltips.js"
-
-// Images
-import {
-
-} from "./images.js"
-
-// Sounds
-import {
-
-} from "./sounds.js"
-
-// Settings
-import {
-
-} from "./config.js"
+} from "./ui.js"
 
 
 
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Game Initialized");
+    console.log("Game initialized")
 
-    // Load the Default Menu
-    initializeDefaultMenu();
-});
+    // Load the default menu
+    initializeDefaultMenu()
+})
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Game Initialized");
+    console.log("Map rendered")
 
     // Render the map on screen
-    renderMap();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Game Initialized");
-
-    // Test placing a tower at (5,3) — adjust coordinates as needed
-    placeTower(5, 3);
-});
+    renderMap()
+})

@@ -307,51 +307,37 @@ Number 2 sounds like what I want for the campaign which is what I want to code f
 Yeah, for time attack all towers would be unlocked and all tower abilities would be researched and ready to use. Players would still need to start from the beginning concerning upgrades that have multiple tiers, like the global armor
 Yeah I think I want all upgrades and research to carry over from one level to the next. This way there’s a good feeling of progression and the enemies can also scale in difficulty to remain challenging. Each planets terrain and effects also increase the need for strategy
 At the end of every level, after the final wave A mega boss appears that is scripted to be unbeatable, there by driving the player from the planet, forcing them to defend the next one in the progression. As the player continues to see this mega boss on each planet, it gets stronger and gains more abilities. Then, on the final space platform level, we meet the boss for the final showdown 
-1️⃣ Grassy Plains (Starting Planet) 🌿
 
+1️⃣ Grassy Plains (Starting Planet) 🌿
 Balanced terrain, perfect for learning mechanics.
 First encounter with the Mega Boss—players realize they can’t win yet.
-2️⃣ Frozen Wasteland ❄️
 
+2️⃣ Frozen Wasteland ❄️
 Snowstorms & ice slow down towers and enemies.
 The Mega Boss now has a shield, reinforcing its evolution.
-3️⃣ Crystal Twilight Planet 💎
 
+3️⃣ Crystal Twilight Planet 💎
 Energy-rich but dangerous—crystal formations block buildable space.
 Crystal towers amplify certain attacks, but some enemies absorb energy.
 The Mega Boss starts summoning elite enemies, making the battle tougher.
-4️⃣ Scorching Red Desert 🌅
 
+4️⃣ Scorching Red Desert 🌅
 Extreme heat affects tower cooldowns (potential overheating mechanic?).
 Sandstorms randomly reduce tower accuracy.
 The Mega Boss destroys random towers before appearing, forcing emergency repositioning.
-5️⃣ Swamp Hellscape 🦠
 
+5️⃣ Swamp Hellscape 🦠
 Very limited buildable space, making tower placement highly strategic.
 Mud slows enemies, but water-resistant units ignore it.
 The Mega Boss now actively attacks the player’s defenses, increasing the urgency to retreat faster.
-6️⃣ Volcanic Death World 🌋
 
+6️⃣ Volcanic Death World 🌋
 Lava flows destroy towers, making survival a constant challenge.
 Ash clouds obscure vision, affecting most towers.
 The Mega Boss starts attacking during the final waves, rather than just appearing afterward.
-7️⃣ Final Showdown: Orbital Defense Platform 🛰️
 
+7️⃣ Final Showdown: Orbital Defense Platform 🛰️
 No terrain-based obstacles—just raw tower defense strategy.
 Mega Boss reaches full power.
 The final fight is multi-phase, testing everything the player has learned.
 No retreat. No running. The final stand.
-
-Yeah let’s do that. Add to my campaign story notes that the humans that the player faces are rebels who want the aliens to take over or something like that, all other humans are trying to defeat the aliens, this explains why the player faces humans early on. The human enemies in the early campaign are rebels—a faction that believes the aliens should take over and fights against the rest of humanity.
-✔ The player represents the last line of defense for Earth and its allied forces.
-✔ Why do the rebels support the aliens?
-
-They believe humanity is doomed and that resistance is futile.
-They think the aliens will spare them if they help overthrow Earth’s defenses.
-Some may even be enhanced or brainwashed by alien technology.
-✔ This justifies why the player fights human enemies first before transitioning to full alien waves.
-✔ As the campaign progresses, the aliens begin taking over, and the rebels become less relevant as the true war unfolds.
-Early waves focus on human rebels, meaning bullets & shrapnel (Machine Gun, Shotgun) are effective early on.
-As the alien threat grows, the Flamethrower Tower becomes more valuable, and players need to adapt their tower choices.
-The player’s goal is to hold off both the rebels and the alien invasion, leading to the final battle on the Orbital Defense Platform.
-\Nope, but it gives me an idea, maybe later in the campaign the aliens create hybrid or brainwashed humans like you mentioned so the player has to fight them again on the final platform level
