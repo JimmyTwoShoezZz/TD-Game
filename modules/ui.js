@@ -123,17 +123,57 @@ function cancelDeleteMode() {
 }
 
 function confirmDeleteTower() {
-    if (!selectedTower) return;
+    if (!selectedTower) return
 
-    console.log(`❌ Deleting Tower: ${selectedTower.name}`);
-    deleteTower(selectedTower); // ✅ Removes the tower
-    selectedTower = null; // Reset selection
-    isDeleteMode = true; // Stay in Delete Mode for additional deletions
+    console.log(`❌ Deleting Tower: ${selectedTower.name}`)
+    deleteTower(selectedTower) // ✅ Removes the tower
+    selectedTower = null // Reset selection
+    isDeleteMode = true // Stay in Delete Mode for additional deletions
 
     openDeleteTowerMenu(); // ✅ Reset the menu for the next selection
 }
 
-function openGlobalUpgradesMenu() { console.log("Opening Global Upgrades Menu"); }
-function openTowerResearchMenu() { console.log("Opening Tower Research Menu"); }
-function startNextWave() { console.log("Starting Next Wave"); }
-function openSettingsMenu() { console.log("Opening Settings Menu"); }
+function openGlobalUpgradesMenu() { console.log("Opening Global Upgrades Menu") }
+function openTowerResearchMenu() { console.log("Opening Tower Research Menu") }
+function startNextWave() { console.log("Starting Next Wave") }
+function openSettingsMenu() { console.log("Opening Settings Menu") }
+
+export function showSettingsWindow() {
+    document.getElementById("settings-window").classList.remove("hidden")
+    document.getElementById("settings-overlay").classList.remove("hidden")
+  }
+  
+  export function hideSettingsWindow() {
+    document.getElementById("settings-window").classList.add("hidden")
+    document.getElementById("settings-overlay").classList.add("hidden")
+  }
+  
+  export function updateSettingsContent(tabName) {
+    const content = document.getElementById("settings-content")
+    content.innerHTML = `<h2>${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Settings</h2><p>Coming soon...</p>`
+    if (tabName === "volume") {
+        content.innerHTML = `
+          <h2>Volume Settings</h2>
+          <p>Adjust audio levels for the game.</p>
+          <div style="margin-top: 20px;">
+            <div style="margin-bottom: 20px;">
+              <label for="global-volume">Global</label>
+              <input type="range" id="global-volume" min="0" max="100" value="80" style="width: 100%;">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label for="music-volume">Music</label>
+              <input type="range" id="music-volume" min="0" max="100" value="70" style="width: 100%;">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label for="sfx-volume">Sound Effects</label>
+              <input type="range" id="sfx-volume" min="0" max="100" value="75" style="width: 100%;">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label for="ui-volume">UI</label>
+              <input type="range" id="ui-volume" min="0" max="100" value="60" style="width: 100%;">
+            </div>
+          </div>`
+      } else {
+        content.innerHTML = `<h2>${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Settings</h2><p>Coming soon...</p>`
+      }
+  }

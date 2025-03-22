@@ -18,6 +18,26 @@
         </span>
     </div>
 
+    <div id="settings-overlay" class="hidden"></div>
+    <div id="settings-window" class="hidden">
+        <div id="settings-sidebar">
+            <button class="settings-tab" data-tab="volume">Volume</button>
+            <button class="settings-tab" data-tab="leaderboard">Leaderboard</button>
+            <button class="settings-tab" data-tab="rules">Rules</button>
+            <button class="settings-tab" data-tab="index" id="index-button"><span class="arrow" id="index-arrow">▶</span> Index</button>
+            <div id="index-submenu" class="submenu hidden">
+                <button class="settings-tab" data-tab="towers">Towers</button>
+                <button class="settings-tab" data-tab="enemies">Enemies</button>
+                <button class="settings-tab" data-tab="planets">Planets</button>
+                <button class="settings-tab" data-tab="bosses">Bosses</button>
+            </div>
+            <button id="close-settings">Close</button>
+        </div>
+        <div id="settings-content">
+            <div id="settings-placeholder">Select a setting from the sidebar.</div>
+        </div>
+      </div>
+
     <div id="game-container">
         <canvas id="game-canvas"></canvas>
     </div>

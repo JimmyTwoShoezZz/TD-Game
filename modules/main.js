@@ -25,7 +25,10 @@ import {
 // Game logic
 import {
     enemies,
-    spawnEnemy
+    spawnEnemy,
+    gameState,
+    resumeGame,
+    pauseGame
 } from "./game.js"
 
 //Handles player actions
@@ -96,7 +99,13 @@ let lastTime = performance.now()
 function gameLoop(currentTime) {
     const deltaTime = (currentTime - lastTime) / 1000
     lastTime = currentTime
-  
+    
+    // === PAUSE CHECK ===
+    if (gameState.paused) {
+        requestAnimationFrame(gameLoop)
+        return
+    }
+
     // === UPDATE ===
     console.log("Enemies array:", enemies)
     for (const enemy of enemies) {
