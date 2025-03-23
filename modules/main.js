@@ -2,6 +2,10 @@
 // Controls all aspects of the program
 
 // IMPORTS
+
+// Main menu
+import "./menu.js"
+
 // Tower, enemy, and global abilities
 import {
 
@@ -28,7 +32,7 @@ import {
     spawnEnemy,
     gameState,
     resumeGame,
-    pauseGame
+    pauseGame,
 } from "./game.js"
 
 //Handles player actions
@@ -46,9 +50,14 @@ import {
     renderMap
 } from "./maps.js"
 
+// Game menu
+import {
+    
+} from "./menu.js"
+
 // Enemy pathfinding logic
 import {
-
+    
 } from "./pathfinding.js"
 
 // Projectiles
@@ -91,8 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeDefaultMenu()
     renderMap()
     spawnEnemy()
-    requestAnimationFrame(gameLoop)
 })
+
+export function initializeGame() {
+    requestAnimationFrame(gameLoop);
+    console.log("Game loop started!");
+  }
 
 let lastTime = performance.now()
 

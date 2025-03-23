@@ -141,11 +141,13 @@ function openSettingsMenu() { console.log("Opening Settings Menu") }
 export function showSettingsWindow() {
     document.getElementById("settings-window").classList.remove("hidden")
     document.getElementById("settings-overlay").classList.remove("hidden")
+    document.getElementById("message-log-window").classList.add("pointer-blocked")
   }
   
   export function hideSettingsWindow() {
     document.getElementById("settings-window").classList.add("hidden")
     document.getElementById("settings-overlay").classList.add("hidden")
+    document.getElementById("message-log-window").classList.remove("pointer-blocked")
   }
   
   export function updateSettingsContent(tabName) {
@@ -176,4 +178,17 @@ export function showSettingsWindow() {
       } else {
         content.innerHTML = `<h2>${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Settings</h2><p>Coming soon...</p>`
       }
+  }
+
+  export function fillTestLog() {
+    const log = document.getElementById("message-log-content");
+    log.innerHTML = ""; // Clear it out first
+  
+    for (let i = 1; i <= 30; i++) {
+      const entry = document.createElement("p");
+      entry.textContent = `Test message #${i}: System check complete.`;
+      log.appendChild(entry);
+    }
+  
+    log.scrollTop = log.scrollHeight; // Auto-scroll to bottom
   }

@@ -89,3 +89,14 @@ document.getElementById("close-settings").addEventListener("click", () => {
   });
 }
   });
+
+  document.getElementById("messagelog-btn").addEventListener("click", () => {
+    document.getElementById("message-log-window").classList.add("visible");
+    fillTestLog();
+  });
+  
+  document.getElementById("close-message-log").addEventListener("click", () => {
+    document.getElementById("message-log-window").classList.remove("visible");
+  });
+
+  import { fillTestLog } from './ui.js';
