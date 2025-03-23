@@ -3,6 +3,7 @@ import { playerData } from './playerData.js'
 import { playTowerDestruction } from './towers.js'
 import { selectTower } from './handlers.js'
 import { startNextWave } from './main.js'
+import { showResearchWindow } from './ui.js'
 
 export function setCommandPanelMode(mode) {
     resetInteractionModes()
@@ -26,7 +27,7 @@ export function initializeDefaultMenu() {
         { id: "btn-2", label: "Repair Tower", action: openRepairTowerMenu },
         { id: "btn-3", label: "Delete Tower", action: openDeleteTowerMenu },
         { id: "btn-4", label: "Global Upgrades", action: openGlobalUpgradesMenu },
-        { id: "btn-5", label: "Tower Research", action: openTowerResearchMenu },
+        { id: "btn-5", label: "Tower Research", action: showResearchWindow },
         { id: "btn-6", label: "", action: null },
         { id: "btn-7", label: "", action: null },
         { id: "btn-8", label: "", action: null },
@@ -60,6 +61,7 @@ export function updateCommandPanel(options) {
 }
 
 export function openBuildTowerMenu(page = 1) {
+    setCommandPanelMode('build')
     const towerPages = {
         1: [
             { id: "btn-1", label: "Machine Gun Tower", action: () => selectTower("Machine Gun"), disabled: !playerData.isTowerUnlocked("Machine Gun") },
@@ -95,6 +97,7 @@ export function openBuildTowerMenu(page = 1) {
 }
 
 export function openRepairTowerMenu() {
+    setCommandPanelMode('default')
     updateCommandPanel([
         { id: "btn-1", label: "Repair Tower", action: enterRepairMode },
         { id: "btn-2", label: "Repair All Towers", action: promptRepairAllConfirmation },
@@ -241,9 +244,60 @@ function cancelDeleteMode() {
     initializeDefaultMenu()
 }
 
+export function openGlobalUpgradesMenu() {
+    setCommandPanelMode('default')
+    updateCommandPanel([
+        { id: "btn-1", label: "Armor Upgrade: Bullets & Explosives", action: upgradeArmorBullets },
+        { id: "btn-2", label: "Armor Upgrade: Biological", action: upgradeArmorBiological },
+        { id: "btn-3", label: "", action: null },
+        { id: "btn-4", label: "", action: null },
+        { id: "btn-5", label: "", action: null },
+        { id: "btn-6", label: "", action: null },
+        { id: "btn-7", label: "", action: null },
+        { id: "btn-8", label: "", action: null },
+        { id: "btn-9", label: "", action: null },
+        { id: "btn-10", label: "", action: null },
+        { id: "btn-11", label: "", action: null },
+        { id: "btn-12", label: "Close Menu", action: initializeDefaultMenu }
+    ])
+}
+
+function upgradeArmorBullets() {
+    console.log("🔧 Upgrading armor vs bullets/explosives");
+}
+
+function upgradeArmorBiological() {
+    console.log("🔧 Upgrading armor vs biological attacks");
+}
 
 
 
 
-function openGlobalUpgradesMenu() {}
-function openTowerResearchMenu() {}
+export function openTowerResearchMenu(page = 1) {
+    setCommandPanelMode('default'); // No special interaction mode needed
+
+    const researchPages = {
+        1: [
+            { id: "btn-1", label: "Unlock Artillery", action: () => unlockTower("Artillery") },
+            { id: "btn-2", label: "Unlock Rail Gun", action: () => unlockTower("Rail Gun") },
+            { id: "btn-3", label: "Unlock EMP", action: () => unlockTower("EMP") },
+            { id: "btn-4", label: "Unlock Shield", action: () => unlockTower("Shield") },
+            { id: "btn-5", label: "Unlock Proximity Mine", action: () => unlockTower("Proximity Mine") },
+            { id: "btn-6", label: "", action: null },
+            { id: "btn-7", label: "", action: null },
+            { id: "btn-8", label: "", action: null },
+            { id: "btn-9", label: "", action: null }
+        ]
+        // Add page 2+ here later if needed
+    };
+
+    const hasPrev = page > 1;
+    const hasNext = page < Object.keys(researchPages).length;
+
+    updateCommandPanel([
+        ...researchPages[page],
+        { id: "btn-10", label: hasPrev ? "←" : "", action: hasPrev ? () => openTowerResearchMenu(page - 1) : null },
+        { id: "btn-11", label: hasNext ? "→" : "", action: hasNext ? () => openTowerResearchMenu(page + 1) : null },
+        { id: "btn-12", label: "Close Menu", action: initializeDefaultMenu }
+    ]);
+}

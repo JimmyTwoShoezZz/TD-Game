@@ -1,3 +1,6 @@
+import { playerData } from './playerData.js'
+import { unlockTower } from './research.js'
+
 export function showSettingsWindow() {
     document.getElementById("settings-window").classList.remove("hidden")
     document.getElementById("message-log-window").classList.add("pointer-blocked")
@@ -37,6 +40,42 @@ export function showSettingsWindow() {
         content.innerHTML = `<h2>${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Settings</h2><p>Coming soon...</p>`
       }
   }
+
+  export function showResearchWindow() {
+    document.getElementById("research-window").classList.remove("hidden")
+  }
+  
+  export function hideResearchWindow() {
+    document.getElementById("research-window").classList.add("hidden")
+  }
+
+  export function updateResearchContent(tabName) {
+    const content = document.getElementById("research-content");
+    const pointsDisplay = document.getElementById("research-points-display");
+    pointsDisplay.textContent = `Tower Research Points: ${gameState.towerResearchPoints}`;
+
+    if (tabName === "towers") {
+        content.innerHTML = "<h2>Tower Unlocks</h2>";
+
+        const towers = ["Artillery", "Rail Gun", "EMP", "Shield", "Proximity Mine"];
+        towers.forEach(tower => {
+            const button = document.createElement("button");
+            button.textContent = playerData.isTowerUnlocked(tower)
+                ? `${tower} (Unlocked)`
+                : `Unlock ${tower}`;
+            button.disabled = playerData.isTowerUnlocked(tower);
+
+            button.onclick = () => {
+                unlockTower(tower);
+                updateResearchContent("towers"); // refresh after unlock
+            };
+
+            content.appendChild(button);
+        });
+    } else {
+        content.innerHTML = `<h2>${tabName}</h2><p>Coming soon...</p>`;
+    }
+}
 
   export function logMessage(text) {
     // 1. Permanently add to the Message Log Panel
