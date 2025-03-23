@@ -1,143 +1,3 @@
-import { deleteTower, repairTower, repairAllTowers, enterRepairMode, selectTower } from "./towers.js"
-
-export function initializeDefaultMenu() {
-    updateCommandPanel([
-        { id: "btn-1", label: "Build Tower", action: () => openBuildTowerMenu(1) },
-        { id: "btn-2", label: "Repair Tower", action: openRepairTowerMenu },
-        { id: "btn-3", label: "Delete Tower", action: openDeleteTowerMenu },
-        { id: "btn-4", label: "Global Upgrades", action: openGlobalUpgradesMenu },
-        { id: "btn-5", label: "Tower Research", action: openTowerResearchMenu },
-        { id: "btn-6", label: "", action: null },
-        { id: "btn-7", label: "", action: null },
-        { id: "btn-8", label: "", action: null },
-        { id: "btn-9", label: "", action: null },
-        { id: "btn-10", label: "", action: null },
-        { id: "btn-11", label: "", action: null },
-        { id: "btn-12", label: "Next Wave", action: startNextWave }
-    ])
-}
-
-export function updateCommandPanel(options) {
-    const panel = document.querySelector(".command-grid")
-    panel.innerHTML = ""
-
-    options.forEach(option => {
-        const button = document.createElement("button")
-        button.classList.add("command-button")
-        button.id = option.id
-        button.textContent = option.label
-        if (option.action) {
-            button.addEventListener("click", option.action)
-        } else {
-            button.classList.add("empty-button")
-        }
-        panel.appendChild(button)
-    })
-}
-
-export function openBuildTowerMenu(page = 1) {
-    const towerPages = {
-        1: [
-            { id: "btn-1", label: "Machine Gun Tower", action: () => selectTower("Machine Gun") },
-            { id: "btn-2", label: "Shotgun Tower", action: () => selectTower("Shotgun") },
-            { id: "btn-3", label: "Artillery Tower", action: () => selectTower("Artillery") },
-            { id: "btn-4", label: "Rail Gun Tower", action: () => selectTower("Rail Gun") },
-            { id: "btn-5", label: "EMP Tower", action: () => selectTower("EMP") },
-            { id: "btn-6", label: "Shield Tower", action: () => selectTower("Shield") },
-            { id: "btn-7", label: "Proximity Mine Tower", action: () => selectTower("Proximity Mine") },
-            { id: "btn-8", label: "", action: null },
-            { id: "btn-9", label: "", action: null }
-        ],
-        2: [
-            { id: "btn-1", label: "Advanced Tower 1", action: () => selectTower("Advanced Tower 1") },
-            { id: "btn-2", label: "Advanced Tower 2", action: () => selectTower("Advanced Tower 2") },
-            { id: "btn-3", label: "Advanced Tower 3", action: () => selectTower("Advanced Tower 3") },
-            { id: "btn-4", label: "Advanced Tower 4", action: () => selectTower("Advanced Tower 4") },
-            { id: "btn-5", label: "", action: null },
-            { id: "btn-6", label: "", action: null },
-            { id: "btn-7", label: "", action: null },
-            { id: "btn-8", label: "", action: null },
-            { id: "btn-9", label: "", action: null }
-        ]
-    }
-    const hasPreviousPage = page > 1
-    const hasNextPage = page < Object.keys(towerPages).length
-    updateCommandPanel([
-        ...towerPages[page],
-        { id: "btn-10", label: hasPreviousPage ? "←" : "", action: hasPreviousPage ? () => openBuildTowerMenu(page - 1) : null },
-        { id: "btn-11", label: hasNextPage ? "→" : "", action: hasNextPage ? () => openBuildTowerMenu(page + 1) : null },
-        { id: "btn-12", label: "Cancel", action: initializeDefaultMenu }
-    ])
-}
-
-export function openRepairTowerMenu() {
-    updateCommandPanel([
-        { id: "btn-1", label: "Repair Tower", action: enterRepairMode },
-        { id: "btn-2", label: "Repair All Towers", action: repairAllTowers },
-        { id: "btn-3", label: "", action: null },
-        { id: "btn-4", label: "", action: null },
-        { id: "btn-5", label: "", action: null },
-        { id: "btn-6", label: "", action: null },
-        { id: "btn-7", label: "", action: null },
-        { id: "btn-8", label: "", action: null },
-        { id: "btn-9", label: "", action: null },
-        { id: "btn-10", label: "", action: null },
-        { id: "btn-11", label: "", action: null },
-        { id: "btn-12", label: "Cancel", action: initializeDefaultMenu }
-    ])
-}
-
-let selectedTower = null;
-
-export function openDeleteTowerMenu() {
-    isDeleteMode = true
-    selectedTower = null // Reset selection
-
-    updateCommandPanel([
-        { id: "btn-1", label: "Confirm", action: confirmDeleteTower, disabled: true }, // Starts disabled
-        { id: "btn-2", label: "", action: null },
-        { id: "btn-3", label: "", action: null },
-        { id: "btn-4", label: "", action: null },
-        { id: "btn-5", label: "", action: null },
-        { id: "btn-6", label: "", action: null },
-        { id: "btn-7", label: "", action: null },
-        { id: "btn-8", label: "", action: null },
-        { id: "btn-9", label: "", action: null },
-        { id: "btn-10", label: "", action: null },
-        { id: "btn-11", label: "", action: null },
-        { id: "btn-12", label: "Cancel", action: cancelDeleteMode } // Always cancels delete mode
-    ])
-}
-
-export function updateDeleteMenu() {
-    updateCommandPanel([
-        { id: "btn-1", label: `Confirm Delete: ${selectedTower.name}`, action: confirmDeleteTower }, // ✅ Enable confirm
-        { id: "btn-12", label: "Cancel", action: cancelDeleteMode }
-    ]);
-}
-
-function cancelDeleteMode() {
-    isDeleteMode = false
-    selectedTower = null
-    initializeDefaultMenu()
-}
-
-function confirmDeleteTower() {
-    if (!selectedTower) return
-
-    console.log(`❌ Deleting Tower: ${selectedTower.name}`)
-    deleteTower(selectedTower) // ✅ Removes the tower
-    selectedTower = null // Reset selection
-    isDeleteMode = true // Stay in Delete Mode for additional deletions
-
-    openDeleteTowerMenu(); // ✅ Reset the menu for the next selection
-}
-
-function openGlobalUpgradesMenu() { console.log("Opening Global Upgrades Menu") }
-function openTowerResearchMenu() { console.log("Opening Tower Research Menu") }
-function startNextWave() { console.log("Starting Next Wave") }
-function openSettingsMenu() { console.log("Opening Settings Menu") }
-
 export function showSettingsWindow() {
     document.getElementById("settings-window").classList.remove("hidden")
     document.getElementById("message-log-window").classList.add("pointer-blocked")
@@ -225,3 +85,29 @@ export function showSettingsWindow() {
     }
   }
   
+  let alertTimeout = null;
+
+export function showAlert(message, type = 'info', size = 'medium', duration = 3000) {
+    const alertEl = document.getElementById("alert");
+
+    // Clear any existing timeout
+    if (alertTimeout) {
+        clearTimeout(alertTimeout);
+        alertTimeout = null;
+    }
+
+    // Reset classes
+    alertEl.className = '';
+    alertEl.classList.add('alert-' + type);
+    alertEl.classList.add('alert-' + size);
+
+    // Set text & reset opacity
+    alertEl.textContent = message;
+    alertEl.style.opacity = '1';
+
+    if (duration > 0) {
+        alertTimeout = setTimeout(() => {
+            alertEl.style.opacity = '0';
+        }, duration);
+    }
+}

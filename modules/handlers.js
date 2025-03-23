@@ -3,7 +3,8 @@ import { showSettingsWindow, hideSettingsWindow, updateSettingsContent } from ".
 document.getElementById("options-btn").addEventListener("click", showSettingsWindow)
 document.getElementById("close-settings").addEventListener("click", hideSettingsWindow)
 
-import { pauseGame, resumeGame, gameState } from "./game.js"
+import { pauseGame, resumeGame } from "./game.js"
+import { gameState } from "./gameState.js"
 
 document.getElementById("options-btn").addEventListener("click", () => {
   pauseGame('menu')
@@ -45,18 +46,18 @@ document.getElementById("close-settings").addEventListener("click", () => {
   })
 
   function initializeSettingsTabListeners() {
-    console.log("Running initializeSettingsTabListeners");
+
   
     document.querySelectorAll('.settings-tab').forEach(button => {
       if (!button.dataset.bound) {
-        console.log("Adding listener to:", button.dataset.tab);
+
         button.addEventListener('click', () => {
-          console.log("Tab clicked:", button.dataset.tab);
+
           updateSettingsContent(button.dataset.tab);
         });
         button.dataset.bound = "true";
       } else {
-        console.log("Already bound:", button.dataset.tab);
+
       }
     });
   }
@@ -71,7 +72,7 @@ document.getElementById("close-settings").addEventListener("click", () => {
   
     if (indexButton && indexSubmenu) {
       indexButton.addEventListener("click", () => {
-        console.log("Index button clicked!");
+
         indexSubmenu.classList.toggle("hidden");
         indexArrow.textContent = indexSubmenu.classList.contains("hidden") ? "▶" : "▼"
       });
@@ -84,7 +85,7 @@ if (pauseButton) {
     const settingsVisible = !document.getElementById("settings-window").classList.contains("hidden");
 
     if (settingsVisible) {
-      console.log("Cannot toggle pause while settings window is open.");
+
       return;
     }
 
@@ -115,3 +116,10 @@ if (pauseButton) {
   document.getElementById("close-message-log").addEventListener("click", () => {
     document.getElementById("message-log-window").classList.remove("visible");
   });
+
+  export function selectTower(towerType) {
+    gameState.selectedTowerType = towerType;
+    gameState.selectedObject = null;
+
+    // Show preview tile or ghost tower if applicable
+}

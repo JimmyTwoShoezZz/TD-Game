@@ -55,6 +55,5 @@ export function spawnEnemy() {
         isAir: false,
         path
     })
-    console.log("Spawning enemy:", grunt); // ✅ Check this log
     enemies.push(grunt)
 }

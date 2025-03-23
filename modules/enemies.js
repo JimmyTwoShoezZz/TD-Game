@@ -55,7 +55,6 @@ export class Enemy {
     
     die() {
         this.alive = false
-        console.log("Enemy killed")
       }
     
     isGround() {

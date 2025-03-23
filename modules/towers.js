@@ -68,7 +68,6 @@ export class Tower {
     }
     
     destroy() {
-        console.log("Tower destroyed")
     }
 }
 
@@ -90,29 +89,25 @@ export class MachineGunTower extends Tower {
   }
 
 
+import { gameState } from './gameState.js';
+
+// Handles visual + logical destruction
+export function playTowerDestruction(tower, options = {}) {
 
 
-export function selectTower() {
-    
+    // TODO: Trigger animation or visual effects here
+    // Example placeholder: tower.playAnimation("explode")
+
+    removeTower(tower);
 }
 
-export function enterRepairMode() {
-    isRepairMode = true
-    console.log("🔧 Entering Repair Mode - Click a tower to repair.");
-    // Future: Set a flag that allows the player to select a tower for repair
-}
+// Removes the tower from the game state
+export function removeTower(tower) {
+    const index = gameState.towers.indexOf(tower);
+    if (index !== -1) {
+        gameState.towers.splice(index, 1);
 
-export function repairTower() {
-    console.log("🔧 Repairing all towers...");
-    // Future: Loop through all towers and repair them
-}
+    }
 
-export function repairAllTowers() {
-    console.log("🔧 Repairing all towers...");
-    // Future: Loop through all towers and repair them
-}
-
-export function deleteTower(tower) {
-    console.log(`🔥 Tower ${tower.name} has been removed!`);
-    tower.remove(); // Remove from the DOM or game state
+    // TODO: Remove from canvas/DOM/etc. if visually represented
 }

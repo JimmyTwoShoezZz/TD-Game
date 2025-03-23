@@ -16,6 +16,19 @@ import {
 
 } from "./collision.js"
 
+import {
+    setCommandPanelMode,
+    initializeDefaultMenu,
+    updateCommandPanel,
+    openBuildTowerMenu,
+    openRepairTowerMenu,
+    enterRepairMode,
+    promptRepairAllConfirmation,
+    repairAllTowers,
+    openDeleteTowerMenu,
+    updateDeleteMenu,
+} from "./commandpanel.js"
+
 // Game settings
 import {
 
@@ -30,14 +43,20 @@ import {
 import {
     enemies,
     spawnEnemy,
-    gameState,
     resumeGame,
     pauseGame,
 } from "./game.js"
 
+import {
+    gameState,
+    PHASES,
+    resetGameState,
+    resetInteractionModes
+} from "./gameState.js"
+
 //Handles player actions
 import {
-
+    selectTower
 } from "./handlers.js"
 
 // Images
@@ -77,20 +96,13 @@ import {
 
 // Towers and their mechanics
 import {
-    enterRepairMode,
-    repairTower,
-    repairAllTowers,
-    deleteTower
+    playTowerDestruction,
+    removeTower
 } from "./towers.js"
 
 // UI and Menus
 import {
-    initializeDefaultMenu,
-    updateCommandPanel,
-    openBuildTowerMenu,
-    openRepairTowerMenu,
-    openDeleteTowerMenu,
-    updateDeleteMenu,
+    showAlert,
     logMessage
 } from "./ui.js"
 
@@ -98,14 +110,18 @@ const canvas = document.getElementById("game-canvas")
 const ctx = canvas.getContext("2d")
 
 document.addEventListener("DOMContentLoaded", () => {
-    initializeDefaultMenu()
-    renderMap()
-    spawnEnemy()
+    initializeGame()
 })
 
+export function startGame() {
+    resetGameState()
+    resetInteractionModes()
+    initializeDefaultMenu()
+}
+
 export function initializeGame() {
-    requestAnimationFrame(gameLoop);
-    console.log("Game loop started!");
+    renderMap()
+    requestAnimationFrame(gameLoop)
   }
 
 let lastTime = performance.now()
@@ -121,9 +137,7 @@ function gameLoop(currentTime) {
     }
 
     // === UPDATE ===
-    console.log("Enemies array:", enemies)
     for (const enemy of enemies) {
-        console.log(`Looping enemy: ${enemy.name}, alive: ${enemy.alive}`)
         if (enemy.alive) {
             enemy.update(currentTime, deltaTime)
         }
@@ -152,4 +166,29 @@ function gameLoop(currentTime) {
 
     // Loop again
     requestAnimationFrame(gameLoop)
+}
+
+export function startNextWave() {
+    if (gameState.phase !== PHASES.PLANNING) return;
+
+    let countdown = 5;
+    showAlert(`Wave begins in ${countdown}...`, "warning", "large");
+
+    const countdownInterval = setInterval(() => {
+        countdown--;
+
+        if (countdown > 0) {
+            showAlert(`Wave begins in ${countdown}...`, "warning", "large");
+        } else {
+            clearInterval(countdownInterval);
+            showAlert(`Wave ${gameState.currentWave + 1} has started!`, "danger", "large", 3000);
+
+            gameState.phase = PHASES.WAVE;
+            gameState.currentWave += 1;
+            gameState.wavesRemaining -= 1;
+
+            spawnEnemy();
+            initializeDefaultMenu();
+        }
+    }, 1000);
 }

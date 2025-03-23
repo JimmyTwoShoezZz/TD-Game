@@ -33,12 +33,18 @@
     transition: background 0.2s ease-in-out;
 }
 
+.command-button:hover {
+    background: #777;
+}
+
+.command-button.command-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .empty-button {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2);
     pointer-events: none;
-}
-
-.command-button:hover {
-    background: #777;
 }

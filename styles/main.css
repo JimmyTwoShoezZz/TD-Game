@@ -49,6 +49,33 @@ body {
     border: 2px solid #444;
 }
 
+#alert {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 12px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10; /* just in case you need to ensure it sits on top */
+}
+
+.alert-small { font-size: 16px; }
+.alert-medium { font-size: 24px; }
+.alert-large { font-size: 32px; }
+
+.alert-info { background: rgba(0, 128, 255, 0.6); color: white; }
+.alert-warning { background: rgba(255, 165, 0, 0.6); color: black; }
+.alert-danger { background: rgba(255, 0, 0, 0.7); color: white; }
+.alert-success { background: rgba(0, 200, 0, 0.6); color: white; }
+
 #game-canvas {
     width: auto;
     height: auto;
