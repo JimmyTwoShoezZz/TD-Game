@@ -1,14 +1,31 @@
 import { playerData } from './playerData.js'
 import { unlockTower } from './research.js'
+import { pauseGame, resumeGame } from './game.js'
+
+export function showOverlayWindow(id, pauseReason = 'overlay') {
+  const window = document.getElementById(id);
+  if (window) {
+    window.classList.remove("hidden");
+    pauseGame(pauseReason);
+    updateUIBlockerState()
+  }
+}
+
+export function hideOverlayWindow(id) {
+  const window = document.getElementById(id);
+  if (window) {
+    window.classList.add("hidden");
+    resumeGame();
+    updateUIBlockerState()
+  }
+}
 
 export function showSettingsWindow() {
-    document.getElementById("settings-window").classList.remove("hidden")
-    document.getElementById("message-log-window").classList.add("pointer-blocked")
+  showOverlayWindow("settings-window", "overlay");
   }
   
   export function hideSettingsWindow() {
-    document.getElementById("settings-window").classList.add("hidden")
-    document.getElementById("message-log-window").classList.remove("pointer-blocked")
+    hideOverlayWindow("settings-window", "overlay");
   }
   
   export function updateSettingsContent(tabName) {
@@ -42,16 +59,26 @@ export function showSettingsWindow() {
   }
 
   export function showResearchWindow() {
-    document.getElementById("research-window").classList.remove("hidden")
+    showOverlayWindow("research-window", "overlay");
   }
   
   export function hideResearchWindow() {
-    document.getElementById("research-window").classList.add("hidden")
+    hideOverlayWindow("research-window", "overlay");
   }
 
   export function updateResearchContent(tabName) {
     const content = document.getElementById("research-content");
-    const pointsDisplay = document.getElementById("research-points-display");
+
+    // ✅ First, make sure research-points-display exists
+    let pointsDisplay = document.getElementById("research-points-display");
+    if (!pointsDisplay) {
+        pointsDisplay = document.createElement("div");
+        pointsDisplay.id = "research-points-display";
+        pointsDisplay.classList.add("points-display");
+        content.prepend(pointsDisplay);
+    }
+
+    // ✅ Now that we're sure it exists, safely update it
     pointsDisplay.textContent = `Tower Research Points: ${gameState.towerResearchPoints}`;
 
     if (tabName === "towers") {

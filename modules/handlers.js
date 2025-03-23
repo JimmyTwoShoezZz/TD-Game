@@ -1,12 +1,13 @@
-import { showSettingsWindow, hideSettingsWindow, updateSettingsContent, showResearchWindow, hideResearchWindow, updateResearchContent } from "./ui.js"
-
-document.getElementById("close-settings").addEventListener("click", hideSettingsWindow)
+import { showSettingsWindow, hideSettingsWindow, updateSettingsContent, hideResearchWindow, updateResearchContent } from "./ui.js"
 
 import { pauseGame, resumeGame } from "./game.js"
 import { gameState } from "./gameState.js"
 
+document.getElementById("close-research").addEventListener("click", () => {
+  hideResearchWindow()
+})
+
 document.getElementById("options-btn").addEventListener("click", () => {
-  console.log("⚙️ Options button clicked");
   pauseGame('menu');
   showSettingsWindow();
 });
@@ -51,10 +52,15 @@ document.getElementById("close-settings").addEventListener("click", () => {
   }
 
   function bindOverlayTabs(containerId, updateFn) {
-    document.querySelectorAll(`#${containerId} .overlay-tab`).forEach(button => {
+    document.querySelectorAll(`#${containerId} .overlay-tab:not(.static-tab)`).forEach(button => {
       if (!button.dataset.bound) {
         button.addEventListener('click', () => {
-          updateFn(button.dataset.tab);
+          const tabName = button.dataset.tab;
+          if (tabName) {
+            updateFn(tabName);
+          } else {
+            console.warn("⚠️ No data-tab on button:", button);
+          }
         });
         button.dataset.bound = "true";
       }

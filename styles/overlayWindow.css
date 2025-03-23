@@ -1,4 +1,4 @@
-#overlay-window {
+.overlay-window {
     overflow: hidden;
     position: fixed;
     top: 50%;
@@ -15,11 +15,11 @@
     color: white;
   }
   
-  #overlay-window.hidden {
+  .overlay-window.hidden {
     display: none;
   }
   
-  #overlay-sidebar {
+  .overlay-sidebar {
     width: 200px;
     background-color: #2c2c2cd3;
     display: flex;
@@ -40,12 +40,16 @@
     display: none;
   }
   
-  .submenu .settings-tab {
+  .submenu.overlay-tab {
     font-size: 0.9em;
     background-color: #333;
   }
 
-  #index-arrow {
+  .static-tab {
+    margin-top: auto;
+  }
+
+  .index-arrow {
     display: inline-block;
     width: 1em;
     text-align: center;
@@ -53,7 +57,7 @@
   }
 
   .overlay-tab,
-  #close-overlay {
+  .close-overlay {
     background-color: #444;
     border: none;
     color: white;
@@ -64,30 +68,30 @@
   }
   
   .overlay-tab:hover,
-  #close-overlay:hover {
+  .close-overlay:hover {
     background-color: #666;
   }
   
-  #overlay-content {
+  .overlay-content {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
   }
 
-  #overlay-content::-webkit-scrollbar {
+  .overlay-content::-webkit-scrollbar {
     width: 10px;
   }
   
-  #overlay-content::-webkit-scrollbar-track {
+  .overlay-content::-webkit-scrollbar-track {
     background: #2c2c2c;
     border-radius: 5px;
   }
   
-  #overlay-content::-webkit-scrollbar-thumb {
+  .overlay-content::-webkit-scrollbar-thumb {
     background: #555;
     border-radius: 5px;
   }
   
-  #overlay-content::-webkit-scrollbar-thumb:hover {
+  .overlay-content::-webkit-scrollbar-thumb:hover {
     background: #777;
   }
