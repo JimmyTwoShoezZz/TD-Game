@@ -1,6 +1,6 @@
 #message-log-window {
     position: fixed;
-    top: 50%;
+    bottom: 270px;
     left: 20px;
     width: 500px;
     height: 300px;
@@ -12,13 +12,13 @@
     color: white;
     display: flex;
     flex-direction: column;
-    transform: translateY(-50%) translateX(-100vw); /* Start off-screen to the left */
+    transform: translateX(-100vw); /* Start off-screen to the left */
     transition: transform 0.4s ease-in-out;
     z-index: 999;
   }
   
   #message-log-window.visible {
-    transform: translateY(-50%) translateX(0);
+    transform: translateX(0);
   }
   
   #message-log-header {

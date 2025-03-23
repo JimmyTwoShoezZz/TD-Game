@@ -6,13 +6,15 @@ document.getElementById("close-settings").addEventListener("click", hideSettings
 import { pauseGame, resumeGame, gameState } from "./game.js"
 
 document.getElementById("options-btn").addEventListener("click", () => {
-  pauseGame()
+  pauseGame('menu')
   showSettingsWindow()
 })
 
 document.getElementById("close-settings").addEventListener("click", () => {
     hideSettingsWindow()
-    resumeGame()
+    if (gameState.pauseReason === 'menu') {
+      resumeGame();
+    }
     // Hide the index submenu
   const indexSubmenu = document.getElementById("index-submenu")
   if (indexSubmenu) {
@@ -77,27 +79,37 @@ document.getElementById("close-settings").addEventListener("click", () => {
 
     const pauseButton = document.getElementById("pause-btn");
 
-    if (pauseButton) {
-    pauseButton.addEventListener("click", () => {
-        if (gameState.paused) {
-      resumeGame();
-      pauseButton.textContent = "Pause"; // Switch back to pause icon
+if (pauseButton) {
+  pauseButton.addEventListener("click", () => {
+    const settingsVisible = !document.getElementById("settings-window").classList.contains("hidden");
+
+    if (settingsVisible) {
+      console.log("Cannot toggle pause while settings window is open.");
+      return;
+    }
+
+    if (gameState.paused) {
+      resumeGame(); // resumes and updates icon
     } else {
-      pauseGame();
-      pauseButton.textContent = "Play"; // Play icon
+      pauseGame('user'); // pauses and updates icon
     }
   });
 }
   });
 
+
   document.getElementById("messagelog-btn").addEventListener("click", () => {
     const logWindow = document.getElementById("message-log-window");
     const logContent = document.getElementById("message-log-content");
   
-    logWindow.classList.add("visible");
-    
-    // Reset scroll position to bottom
-    logContent.scrollTop = logContent.scrollHeight;
+    const isVisible = logWindow.classList.contains("visible");
+  
+    if (isVisible) {
+      logWindow.classList.remove("visible");
+    } else {
+      logWindow.classList.add("visible");
+      logContent.scrollTop = logContent.scrollHeight; // scroll to bottom on open
+    }
   });
   
   document.getElementById("close-message-log").addEventListener("click", () => {

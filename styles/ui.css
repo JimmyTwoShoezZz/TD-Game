@@ -17,10 +17,10 @@
 
 #ui-blocker-overlay {
     position: fixed;
-    top: 60px; /* assumes top bar is 60px tall */
+    top: 50px; /* assumes top bar is 50px tall */
     left: 0;
     width: 100vw;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 50px);
     background: transparent;
     z-index: 900; /* below floating windows like settings/message log */
     pointer-events: all;

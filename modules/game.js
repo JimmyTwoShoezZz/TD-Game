@@ -12,24 +12,28 @@ import {
 
 export const gameState = {
     paused: false,
+    pauseReason: null,
     // ... other game state like wave number, resources, etc.
 }
   
-import { updateUIBlockerState } from './ui.js';
+import { updateUIBlockerState, updatePauseButtonIcon } from './ui.js';
 
-export function pauseGame() {
+export function pauseGame(reason = 'user') {
   if (!gameState.paused) {
     gameState.paused = true;
-    console.log("Game paused");
+    gameState.pauseReason = reason;
     updateUIBlockerState();
+    updatePauseButtonIcon();
   }
 }
 
-export function resumeGame() {
+export function resumeGame(force = false) {
   if (gameState.paused) {
+    // If the player is clicking ▶️, that's always a force resume
     gameState.paused = false;
-    console.log("Game resumed");
+    gameState.pauseReason = null;
     updateUIBlockerState();
+    updatePauseButtonIcon();
   }
 }
 

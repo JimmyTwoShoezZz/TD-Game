@@ -201,6 +201,8 @@ export function showSettingsWindow() {
     }, 4000);
   }
 
+  import { gameState } from './game.js'
+
   export function updateUIBlockerState() {
     const overlay = document.getElementById("ui-blocker-overlay");
   
@@ -210,3 +212,16 @@ export function showSettingsWindow() {
       overlay.classList.add("hidden");
     }
   }
+
+  export function updatePauseButtonIcon() {
+    const pauseBtn = document.getElementById("pause-btn");
+  
+    if (!pauseBtn) return;
+  
+    if (gameState.paused) {
+      pauseBtn.textContent = "Play";
+    } else {
+      pauseBtn.textContent = "Pause";
+    }
+  }
+  
