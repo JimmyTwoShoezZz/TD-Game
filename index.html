@@ -25,7 +25,7 @@
         </span>
     </div>
 
-    <div id="settings-overlay" class="hidden"></div>
+    <div id="ui-blocker-overlay" class="hidden"></div>
     <div id="settings-window" class="hidden">
         <div id="settings-sidebar">
             <button class="settings-tab" data-tab="volume">Volume</button>
@@ -38,6 +38,7 @@
                 <button class="settings-tab" data-tab="planets">Planets</button>
                 <button class="settings-tab" data-tab="bosses">Bosses</button>
             </div>
+            <button class="settings-tab" data-tab="credits">Credits</button>
             <button id="close-settings">Close</button>
         </div>
         <div id="settings-content">
@@ -45,7 +46,7 @@
         </div>
       </div>
 
-      <div id="message-log-window" class="hidden">
+      <div id="message-log-window">
         <div id="message-log-header">
           <h2>Message Log</h2>
           <button id="close-message-log">✖️</button>
@@ -54,6 +55,7 @@
           <p>System initialized.</p>
         </div>
       </div>
+      <div id="message-popups-container"></div>
 
     <div id="game-container">
         <canvas id="game-canvas"></canvas>

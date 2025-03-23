@@ -140,13 +140,11 @@ function openSettingsMenu() { console.log("Opening Settings Menu") }
 
 export function showSettingsWindow() {
     document.getElementById("settings-window").classList.remove("hidden")
-    document.getElementById("settings-overlay").classList.remove("hidden")
     document.getElementById("message-log-window").classList.add("pointer-blocked")
   }
   
   export function hideSettingsWindow() {
     document.getElementById("settings-window").classList.add("hidden")
-    document.getElementById("settings-overlay").classList.add("hidden")
     document.getElementById("message-log-window").classList.remove("pointer-blocked")
   }
   
@@ -180,15 +178,35 @@ export function showSettingsWindow() {
       }
   }
 
-  export function fillTestLog() {
-    const log = document.getElementById("message-log-content");
-    log.innerHTML = ""; // Clear it out first
+  export function logMessage(text) {
+    // 1. Permanently add to the Message Log Panel
+    const logContent = document.getElementById("message-log-content");
+    const logEntry = document.createElement("p");
+    logEntry.textContent = text;
+    logContent.appendChild(logEntry);
+    logContent.scrollTop = logContent.scrollHeight;
   
-    for (let i = 1; i <= 30; i++) {
-      const entry = document.createElement("p");
-      entry.textContent = `Test message #${i}: System check complete.`;
-      log.appendChild(entry);
+    // 2. Always show temporary on-screen popup
+    const popupsContainer = document.getElementById("message-popups-container");
+  
+    const popup = document.createElement("div");
+    popup.classList.add("message-popup");
+    popup.textContent = text;
+    popupsContainer.appendChild(popup);
+  
+    // Fade out and remove popup after 4 seconds
+    setTimeout(() => {
+      popup.style.opacity = "0";
+      setTimeout(() => popup.remove(), 500);
+    }, 4000);
+  }
+
+  export function updateUIBlockerState() {
+    const overlay = document.getElementById("ui-blocker-overlay");
+  
+    if (gameState.paused) {
+      overlay.classList.remove("hidden");
+    } else {
+      overlay.classList.add("hidden");
     }
-  
-    log.scrollTop = log.scrollHeight; // Auto-scroll to bottom
   }

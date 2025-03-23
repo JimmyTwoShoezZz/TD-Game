@@ -90,7 +90,8 @@ import {
     openBuildTowerMenu,
     openRepairTowerMenu,
     openDeleteTowerMenu,
-    updateDeleteMenu
+    updateDeleteMenu,
+    logMessage
 } from "./ui.js"
 
 const canvas = document.getElementById("game-canvas")

@@ -91,12 +91,15 @@ document.getElementById("close-settings").addEventListener("click", () => {
   });
 
   document.getElementById("messagelog-btn").addEventListener("click", () => {
-    document.getElementById("message-log-window").classList.add("visible");
-    fillTestLog();
+    const logWindow = document.getElementById("message-log-window");
+    const logContent = document.getElementById("message-log-content");
+  
+    logWindow.classList.add("visible");
+    
+    // Reset scroll position to bottom
+    logContent.scrollTop = logContent.scrollHeight;
   });
   
   document.getElementById("close-message-log").addEventListener("click", () => {
     document.getElementById("message-log-window").classList.remove("visible");
   });
-
-  import { fillTestLog } from './ui.js';

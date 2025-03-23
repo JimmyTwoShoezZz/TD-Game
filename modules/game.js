@@ -15,22 +15,22 @@ export const gameState = {
     // ... other game state like wave number, resources, etc.
 }
   
+import { updateUIBlockerState } from './ui.js';
+
 export function pauseGame() {
-    if (!gameState.paused) {
-        gameState.paused = true
-        console.log("Game paused")
-        // Stop timers, animations, or anything else running
-        // Example: clearInterval(gameLoop);
-    }
+  if (!gameState.paused) {
+    gameState.paused = true;
+    console.log("Game paused");
+    updateUIBlockerState();
+  }
 }
-  
+
 export function resumeGame() {
-    if (gameState.paused) {
-        gameState.paused = false
-        console.log("Game resumed")
-        // Restart anything you stopped in pauseGame()
-        // Example: gameLoop = setInterval(updateGame, 16);
-    }
+  if (gameState.paused) {
+    gameState.paused = false;
+    console.log("Game resumed");
+    updateUIBlockerState();
+  }
 }
 
 export const enemies = []
