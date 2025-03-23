@@ -1,0 +1,26 @@
+#top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 50px;
+    background: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+#resources {
+    display: flex;
+    position: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#wave-info {
+    display: flex;
+    position: center;
+    align-items: center;
+    justify-content: center;
+}

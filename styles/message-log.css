@@ -1,0 +1,55 @@
+#message-log-window {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    width: 500px;
+    height: 300px;
+    overflow: hidden;
+    background-color: rgba(30, 30, 30, 0.85);
+    border: 2px solid #888;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-50%) translateX(-100vw); /* Start off-screen to the left */
+    transition: transform 0.4s ease-in-out;
+    z-index: 999;
+  }
+  
+  #message-log-window.visible {
+    transform: translateY(-50%) translateX(0);
+  }
+  
+  #message-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #444;
+    background-color: #222;
+  }
+  
+  #message-log-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  #message-log-content::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  #message-log-content::-webkit-scrollbar-track {
+    background: #2c2c2c;
+    border-radius: 5px;
+  }
+  
+  #message-log-content::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+  }
+  
+  #message-log-content::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }

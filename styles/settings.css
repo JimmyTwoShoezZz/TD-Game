@@ -1,0 +1,107 @@
+#settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0);
+    z-index: 998;
+  }
+  
+  #settings-overlay.hidden {
+    display: none;
+  }
+
+#settings-window {
+    overflow: hidden;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 500px;
+    background-color: rgba(30, 30, 30, 0.85);
+    border: 2px solid #888;
+    display: flex;
+    z-index: 1000;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    color: white;
+  }
+  
+  #settings-window.hidden {
+    display: none;
+  }
+  
+  #settings-sidebar {
+    width: 200px;
+    background-color: #2c2c2cd3;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+    border-right: 1px solid #444;
+  }
+  
+  .submenu {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    gap: 5px;
+  }
+  
+  .submenu.hidden {
+    display: none;
+  }
+  
+  .submenu .settings-tab {
+    font-size: 0.9em;
+    background-color: #333;
+  }
+
+  #index-arrow {
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .settings-tab,
+  #close-settings {
+    background-color: #444;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: left;
+  }
+  
+  .settings-tab:hover,
+  #close-settings:hover {
+    background-color: #666;
+  }
+  
+  #settings-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  #settings-content::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  #settings-content::-webkit-scrollbar-track {
+    background: #2c2c2c;
+    border-radius: 5px;
+  }
+  
+  #settings-content::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+  }
+  
+  #settings-content::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }
