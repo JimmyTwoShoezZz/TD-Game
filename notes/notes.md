@@ -89,13 +89,9 @@ Shield Tower
     Once destroyed it does not come back
     I want enemy units to prioritize that tower based on proximity, if they are in range, they attack it, if not, they attack other towers that are vilnerable
 Machine Gun Tower
-    Let’s add a machine gun tower. It attacks single target, quickly, and low damage
     3 upgrades, fire rate, damage, and armor piercing rounds (reduce armor effectiveness)
-    ground only
 Shotgun Tower
-    Let’s add a shotgun tower. Shoots lots of projectiles at once in the general direction of enemies, but has a short time between shots that it can’t fire
     Reduce cool down time, increase damage, increase bullet spread
-    ground only
 Flamethrower Tower (Updated Mechanics)
 ✔ Short-range continuous AoE damage (fires a stream of flames).
 ✔ Highly effective against alien enemies (deals bonus damage or ignores alien resistance).

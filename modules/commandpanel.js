@@ -4,6 +4,7 @@ import { playTowerDestruction } from './towers.js'
 import { selectTower } from './handlers.js'
 import { startNextWave } from './main.js'
 import { showResearchWindow } from './ui.js'
+import { towerConfigs } from './towerConfigs.js'
 
 export function setCommandPanelMode(mode) {
     resetInteractionModes()
@@ -23,7 +24,7 @@ export function setCommandPanelMode(mode) {
 export function initializeDefaultMenu() {
     setCommandPanelMode('default')
     updateCommandPanel([
-        { id: "btn-1", label: "Build Tower", action: () => openBuildTowerMenu(1) },
+        { id: "btn-1", label: "Build Tower", action: showBuildTowerMenu },
         { id: "btn-2", label: "Repair Tower", action: openRepairTowerMenu },
         { id: "btn-3", label: "Delete Tower", action: openDeleteTowerMenu },
         { id: "btn-4", label: "Global Upgrades", action: openGlobalUpgradesMenu },
@@ -60,41 +61,88 @@ export function updateCommandPanel(options) {
     })
 }
 
-export function openBuildTowerMenu(page = 1) {
-    setCommandPanelMode('build')
-    const towerPages = {
-        1: [
-            { id: "btn-1", label: "Machine Gun Tower", action: () => selectTower("Machine Gun"), disabled: !playerData.isTowerUnlocked("Machine Gun") },
-            { id: "btn-2", label: "Shotgun Tower", action: () => selectTower("Shotgun"), disabled: !playerData.isTowerUnlocked("Shotgun") },
-            { id: "btn-3", label: "Artillery Tower", action: () => selectTower("Artillery"), disabled: !playerData.isTowerUnlocked("Artillery") },
-            { id: "btn-4", label: "Rail Gun Tower", action: () => selectTower("Rail Gun"), disabled: !playerData.isTowerUnlocked("Rail Gun") },
-            { id: "btn-5", label: "EMP Tower", action: () => selectTower("EMP"), disabled: !playerData.isTowerUnlocked("EMP") },
-            { id: "btn-6", label: "Shield Tower", action: () => selectTower("Shield"), disabled: !playerData.isTowerUnlocked("Shield") },
-            { id: "btn-7", label: "Proximity Mine Tower", action: () => selectTower("Proximity Mine"), disabled: !playerData.isTowerUnlocked("Proximity Mine") },
-            { id: "btn-8", label: "", action: null },
-            { id: "btn-9", label: "", action: null }
-        ],
-        2: [
-            { id: "btn-1", label: "", action: null },
-            { id: "btn-2", label: "", action: null },
-            { id: "btn-3", label: "", action: null },
-            { id: "btn-4", label: "", action: null },
-            { id: "btn-5", label: "", action: null },
-            { id: "btn-6", label: "", action: null },
-            { id: "btn-7", label: "", action: null },
-            { id: "btn-8", label: "", action: null },
-            { id: "btn-9", label: "", action: null }
-        ]
+export function setCommandButton(id, label, onClick) {
+    const button = document.getElementById(`btn-${id}`);
+    if (!button) return;
+  
+    button.innerText = label || '';
+    button.disabled = !label;
+  
+    // Clear previous click events
+    button.onclick = null;
+  
+    // Assign new one if provided
+    if (onClick && label) {
+      button.onclick = onClick;
     }
-    const hasPreviousPage = page > 1
-    const hasNextPage = page < Object.keys(towerPages).length
-    updateCommandPanel([
-        ...towerPages[page],
-        { id: "btn-10", label: hasPreviousPage ? "←" : "", action: hasPreviousPage ? () => openBuildTowerMenu(page - 1) : null },
-        { id: "btn-11", label: hasNextPage ? "→" : "", action: hasNextPage ? () => openBuildTowerMenu(page + 1) : null },
-        { id: "btn-12", label: "Cancel", action: initializeDefaultMenu }
-    ])
 }
+  
+export function clearCommandButton(id) {
+    setCommandButton(id, '', null);
+}
+
+export function resetCommandPanel() {
+    const panel = document.querySelector(".command-grid")
+    while (panel.firstChild) {
+        panel.removeChild(panel.firstChild)
+    }
+}
+
+  let towerBuildPage = 0;
+  const towersPerPage = 9;
+  
+  export function showBuildTowerMenu() {
+    setCommandPanelMode('build');
+    const towerNames = Object.keys(towerConfigs);
+    const totalPages = Math.ceil(towerNames.length / towersPerPage);
+    const pageTowers = towerNames.slice(
+      towerBuildPage * towersPerPage,
+      (towerBuildPage + 1) * towersPerPage
+    );
+  
+    const options = [];
+  
+    for (let i = 0; i < towersPerPage; i++) {
+      const towerName = pageTowers[i];
+      options.push({
+        id: `btn-${i + 1}`,
+        label: towerName || "",
+        action: towerName
+          ? () => enterTowerPlacementMode(towerConfigs[towerName].class)
+          : null
+      });
+    }
+  
+    // Pagination
+    options.push({
+      id: "btn-10",
+      label: towerBuildPage > 0 ? "◀️ Prev" : "",
+      action: towerBuildPage > 0 ? () => {
+        towerBuildPage--;
+        showBuildTowerMenu();
+      } : null
+    });
+  
+    options.push({
+      id: "btn-11",
+      label: towerBuildPage < totalPages - 1 ? "Next ▶️" : "",
+      action: towerBuildPage < totalPages - 1 ? () => {
+        towerBuildPage++;
+        showBuildTowerMenu();
+      } : null
+    });
+  
+    options.push({
+      id: "btn-12",
+      label: "Cancel",
+      action: () => {
+        towerBuildPage = 0;
+        initializeDefaultMenu();
+      }
+    });
+  
+    updateCommandPanel(options);
+  }
 
 export function openRepairTowerMenu() {
     setCommandPanelMode('default')
@@ -141,6 +189,7 @@ export function promptRepairAllConfirmation() {
     confirmBtn.textContent = "Confirm Repair"
     confirmBtn.onclick = () => {
         repairAllTowers()
+        resetCommandPanel()
         initializeDefaultMenu()
         infoPanel.innerHTML = ""
     }
@@ -149,6 +198,7 @@ export function promptRepairAllConfirmation() {
     const cancelBtn = document.createElement("button")
     cancelBtn.textContent = "Cancel"
     cancelBtn.onclick = () => {
+        resetCommandPanel()
         openRepairTowerMenu()
         infoPanel.innerHTML = ""
     }
@@ -181,7 +231,6 @@ export function repairAllTowers() {
 export function openDeleteTowerMenu() {
     setCommandPanelMode('delete'); // sets isDeleteMode and resets others
     gameState.selectedObject = null;
-
     updateCommandPanel([
         { id: "btn-1", label: "Select A Tower", action: null, disabled: true },
         { id: "btn-2", label: "", action: null },
@@ -214,6 +263,7 @@ export function updateDeleteMenu() {
     confirmBtn.onclick = () => {
         confirmDeleteTower()          // Removes the tower
         infoPanel.innerHTML = ""      // Clear panel
+        resetCommandPanel()
         openDeleteTowerMenu()         // Reset menu for next delete
     };
     infoPanel.appendChild(confirmBtn)
@@ -223,6 +273,7 @@ export function updateDeleteMenu() {
     cancelBtn.onclick = () => {
         gameState.selectedObject = null
         infoPanel.innerHTML = ""      // Clear confirmation
+        resetCommandPanel()
         openDeleteTowerMenu()         // Stay in Delete Mode
     }
     infoPanel.appendChild(cancelBtn)
@@ -234,14 +285,15 @@ function confirmDeleteTower() {
 
     playTowerDestruction(tower, { isManual: true })
     gameState.selectedObject = null
-
-    openDeleteTowerMenu() // Stay in delete mode
+    resetCommandPanel()
+    openDeleteTowerMenu()
 }
 
 function cancelDeleteMode() {
+    resetCommandPanel()
     setCommandPanelMode('default')
-    gameState.selectedObject = null
     initializeDefaultMenu()
+    gameState.selectedObject = null
 }
 
 export function openGlobalUpgradesMenu() {
@@ -268,36 +320,4 @@ function upgradeArmorBullets() {
 
 function upgradeArmorBiological() {
     console.log("🔧 Upgrading armor vs biological attacks");
-}
-
-
-
-
-export function openTowerResearchMenu(page = 1) {
-    setCommandPanelMode('default'); // No special interaction mode needed
-
-    const researchPages = {
-        1: [
-            { id: "btn-1", label: "Unlock Artillery", action: () => unlockTower("Artillery") },
-            { id: "btn-2", label: "Unlock Rail Gun", action: () => unlockTower("Rail Gun") },
-            { id: "btn-3", label: "Unlock EMP", action: () => unlockTower("EMP") },
-            { id: "btn-4", label: "Unlock Shield", action: () => unlockTower("Shield") },
-            { id: "btn-5", label: "Unlock Proximity Mine", action: () => unlockTower("Proximity Mine") },
-            { id: "btn-6", label: "", action: null },
-            { id: "btn-7", label: "", action: null },
-            { id: "btn-8", label: "", action: null },
-            { id: "btn-9", label: "", action: null }
-        ]
-        // Add page 2+ here later if needed
-    };
-
-    const hasPrev = page > 1;
-    const hasNext = page < Object.keys(researchPages).length;
-
-    updateCommandPanel([
-        ...researchPages[page],
-        { id: "btn-10", label: hasPrev ? "←" : "", action: hasPrev ? () => openTowerResearchMenu(page - 1) : null },
-        { id: "btn-11", label: hasNext ? "→" : "", action: hasNext ? () => openTowerResearchMenu(page + 1) : null },
-        { id: "btn-12", label: "Close Menu", action: initializeDefaultMenu }
-    ]);
 }

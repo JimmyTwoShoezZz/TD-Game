@@ -1,4 +1,6 @@
-import { showSettingsWindow, hideSettingsWindow, updateSettingsContent, hideResearchWindow, updateResearchContent } from "./ui.js"
+import { showSettingsWindow, hideSettingsWindow, hideResearchWindow } from "./ui.js"
+import { updateResearchContent } from "./towerResearchUI.js"
+import { updateSettingsContent } from "./settingsUI.js"
 
 import { pauseGame, resumeGame } from "./game.js"
 import { gameState } from "./gameState.js"

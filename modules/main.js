@@ -20,7 +20,9 @@ import {
     setCommandPanelMode,
     initializeDefaultMenu,
     updateCommandPanel,
-    openBuildTowerMenu,
+    setCommandButton,
+    clearCommandButton,
+    showBuildTowerMenu,
     openRepairTowerMenu,
     enterRepairMode,
     promptRepairAllConfirmation,
@@ -140,6 +142,8 @@ function gameLoop(currentTime) {
     for (const enemy of enemies) {
         if (enemy.alive) {
             enemy.update(currentTime, deltaTime)
+            enemy.updateBurn(deltaTime, currentTime)
+            enemy.updateCorrosion(deltaTime, currentTime)
         }
     }
   

@@ -27,6 +27,9 @@
     justify-content: center;
     background: #555;
     color: white;
+    white-space: normal; /* 🔥 allow wrapping */
+    overflow-wrap: break-word; /* 🔥 break long words */
+    word-break: break-word;
     font-size: 14px;
     border: 1px solid #777;
     cursor: pointer;

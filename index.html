@@ -47,14 +47,16 @@
 
     <div id="research-window" class="overlay-window hidden">
         <div class="overlay-sidebar">
-            <button class="overlay-tab" data-tab="towers">Tower Unlocks</button>
-            <button id="close-research" class="overlay-tab static-tab">Close</button>
+            <div id="tower-sidebar-buttons">
+                <!-- JS will inject tower buttons here directly -->
+            </div>
+          <button class="overlay-tab static-tab" id="close-research">Close</button>
         </div>
+      
         <div class="overlay-content" id="research-content">
-            <div id="research-points-display"></div>
-            <div class="overlay-placeholder">Select a research category.</div>
+          <div class="overlay-placeholder">Select a tower from the sidebar.</div>
         </div>
-    </div>
+      </div>      
 
       <div id="message-log-window">
         <div id="message-log-header">

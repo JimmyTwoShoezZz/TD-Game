@@ -84,3 +84,20 @@ export function isTileBuildable(row, col) {
     const tile = getTileType(MAP_GRID[row][col]);
     return tile ? tile.buildable : false;
 }
+
+export function isTileBlocked(x, y, allEnemies) {
+    // Check map bounds
+    if (x < 0 || y < 0 || y >= gameState.map.length || x >= gameState.map[0].length) {
+      return true; // out of bounds = blocked
+    }
+  
+    const tile = gameState.map[y][x];
+  
+    // Check if it's a blocker tile
+    const terrainIsBlocked = tile.type === 'terrainBlocker' || tile.type === 'liquid';
+  
+    // Check if any enemy is standing on the tile
+    const enemyInTile = allEnemies.some(e => e.x === x && e.y === y && !e.isAir);
+  
+    return terrainIsBlocked || enemyInTile;
+}

@@ -1,6 +1,9 @@
 import { playerData } from './playerData.js'
 import { unlockTower } from './research.js'
 import { pauseGame, resumeGame } from './game.js'
+import { initializeTowerResearchUI, updateResearchContent } from './towerResearchUI.js'
+import { updateSettingsContent } from './settingsUI.js'
+
 
 export function showOverlayWindow(id, pauseReason = 'overlay') {
   const window = document.getElementById(id);
@@ -27,157 +30,17 @@ export function showSettingsWindow() {
   export function hideSettingsWindow() {
     hideOverlayWindow("settings-window", "overlay");
   }
-  
-  export function updateSettingsContent(tabName) {
-    const content = document.getElementById("settings-content")
-    content.innerHTML = `<h2>${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Settings</h2><p>Coming soon...</p>`
-    if (tabName === "volume") {
-        content.innerHTML = `
-          <h2>Volume Settings</h2>
-          <p>Adjust audio levels for the game.</p>
-          <div style="margin-top: 20px;">
-            <div style="margin-bottom: 20px;">
-              <label for="global-volume">Global</label>
-              <input type="range" id="global-volume" min="0" max="100" value="80" style="width: 100%;">
-            </div>
-            <div style="margin-bottom: 20px;">
-              <label for="music-volume">Music</label>
-              <input type="range" id="music-volume" min="0" max="100" value="70" style="width: 100%;">
-            </div>
-            <div style="margin-bottom: 20px;">
-              <label for="sfx-volume">Sound Effects</label>
-              <input type="range" id="sfx-volume" min="0" max="100" value="75" style="width: 100%;">
-            </div>
-            <div style="margin-bottom: 20px;">
-              <label for="ui-volume">UI</label>
-              <input type="range" id="ui-volume" min="0" max="100" value="60" style="width: 100%;">
-            </div>
-          </div>`
-      } else {
-        content.innerHTML = `<h2>${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Settings</h2><p>Coming soon...</p>`
-      }
-  }
 
   export function showResearchWindow() {
     showOverlayWindow("research-window", "overlay");
+    initializeTowerResearchUI(); // build the sidebar
+    updateResearchContent("towers"); // optional placeholder message
   }
   
   export function hideResearchWindow() {
     hideOverlayWindow("research-window", "overlay");
   }
 
-  export function updateResearchContent(tabName) {
-    const content = document.getElementById("research-content");
-
-    // ✅ First, make sure research-points-display exists
-    let pointsDisplay = document.getElementById("research-points-display");
-    if (!pointsDisplay) {
-        pointsDisplay = document.createElement("div");
-        pointsDisplay.id = "research-points-display";
-        pointsDisplay.classList.add("points-display");
-        content.prepend(pointsDisplay);
-    }
-
-    // ✅ Now that we're sure it exists, safely update it
-    pointsDisplay.textContent = `Tower Research Points: ${gameState.towerResearchPoints}`;
-
-    if (tabName === "towers") {
-      content.innerHTML = "<h2>Tower Unlocks</h2>";
-  
-      const towers = [
-          {
-              name: "Artillery",
-              description: "Long-range splash damage tower. Slow fire rate.",
-              stats: { damage: "High", range: "Very Long", speed: "Slow" },
-              image: "images/artillery.png"
-          },
-          {
-              name: "Rail Gun",
-              description: "High damage to large enemies. Ignores armor.",
-              stats: { damage: "Massive", range: "Long", speed: "Very Slow" },
-              image: "images/railgun.png"
-          },
-          {
-              name: "EMP",
-              description: "Disables enemy abilities temporarily.",
-              stats: { damage: "None", range: "Medium", speed: "Moderate" },
-              image: "images/emp.png"
-          },
-          {
-              name: "Shield",
-              description: "Generates a protective shield over nearby towers.",
-              stats: { health: "Moderate", radius: "Large", duration: "Until destroyed" },
-              image: "images/shield.png"
-          },
-          {
-              name: "Proximity Mine",
-              description: "Deploys air mines to damage or disable flying enemies.",
-              stats: { damage: "Moderate", range: "Auto-deploy", speed: "Passive" },
-              image: "images/proximity.png"
-          },
-      ];
-  
-      towers.forEach(tower => {
-          const towerCard = document.createElement("div");
-          towerCard.classList.add("tower-card");
-  
-          // Image
-          const image = document.createElement("img");
-          image.src = tower.image;
-          image.alt = tower.name;
-          image.classList.add("tower-image");
-  
-          // Info container (name, desc, stats, unlock)
-          const infoContainer = document.createElement("div");
-          infoContainer.classList.add("tower-info");
-  
-          // Name
-          const title = document.createElement("h3");
-          title.classList.add("tower-name");
-          title.textContent = tower.name;
-  
-          // Description
-          const desc = document.createElement("p");
-          desc.classList.add("tower-description");
-          desc.textContent = tower.description;
-  
-          // Stats
-          const statsList = document.createElement("ul");
-          statsList.classList.add("tower-stats");
-          for (let stat in tower.stats) {
-              const li = document.createElement("li");
-              li.textContent = `${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${tower.stats[stat]}`;
-              statsList.appendChild(li);
-          }
-  
-          // Unlock button
-          const button = document.createElement("button");
-          button.classList.add("unlock-button");
-          const unlocked = playerData.isTowerUnlocked(tower.name);
-          button.textContent = unlocked ? "Unlocked" : "Unlock";
-          button.disabled = unlocked;
-  
-          button.onclick = () => {
-              unlockTower(tower.name);
-              updateResearchContent("towers");
-          };
-  
-          // Assemble info
-          infoContainer.appendChild(title);
-          infoContainer.appendChild(desc);
-          infoContainer.appendChild(statsList);
-          infoContainer.appendChild(button);
-  
-          // Assemble card
-          towerCard.appendChild(image);
-          towerCard.appendChild(infoContainer);
-  
-          content.appendChild(towerCard);
-      });
-    } else {
-        content.innerHTML = `<h2>${tabName}</h2><p>Coming soon...</p>`;
-    }
-}
 
   export function logMessage(text) {
     // 1. Permanently add to the Message Log Panel
