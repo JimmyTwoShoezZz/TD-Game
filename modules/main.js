@@ -141,9 +141,14 @@ function gameLoop(currentTime) {
     // === UPDATE ===
     for (const enemy of enemies) {
         if (enemy.alive) {
-            enemy.update(currentTime, deltaTime)
             enemy.updateBurn(deltaTime, currentTime)
             enemy.updateCorrosion(deltaTime, currentTime)
+            enemy.target(gameState)
+            if (enemy.target && enemy.distanceTo(enemy.target) <= enemy.range) {
+                enemy.attack(currentTime)
+            } else {
+                enemy.move(currentTime, deltaTime)
+            }
         }
     }
   
