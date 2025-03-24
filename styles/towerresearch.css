@@ -1,0 +1,63 @@
+.tower-card {
+    display: flex;
+    background-color: #222;
+    color: #fff;
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+    position: relative;
+    min-height: 140px;
+  }
+  
+  .tower-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background-color: #111;
+  }
+  
+  .tower-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex-grow: 1;
+    position: relative;
+  }
+  
+  .tower-name {
+    margin: 0;
+  }
+  
+  .tower-description {
+    margin: 4px 0;
+    font-style: italic;
+    color: #ccc;
+  }
+  
+  .tower-stats {
+    list-style: none;
+    padding-left: 0;
+    margin: 6px 0 40px 0; /* bottom margin leaves space for button */
+  }
+  
+  .unlock-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 6px;
+    font-weight: bold;
+    background-color: #027c1d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .unlock-button:disabled {
+    background-color: #555;
+    cursor: default;
+  }  

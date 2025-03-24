@@ -12,6 +12,7 @@
 @import url('overlayWindow.css');
 @import url('message-log.css');
 @import url('title-screen.css');
+@import url('towerresearch.css');
 
 * {
     margin: 0;

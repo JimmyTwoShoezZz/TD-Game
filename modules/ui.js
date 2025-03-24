@@ -82,23 +82,98 @@ export function showSettingsWindow() {
     pointsDisplay.textContent = `Tower Research Points: ${gameState.towerResearchPoints}`;
 
     if (tabName === "towers") {
-        content.innerHTML = "<h2>Tower Unlocks</h2>";
-
-        const towers = ["Artillery", "Rail Gun", "EMP", "Shield", "Proximity Mine"];
-        towers.forEach(tower => {
-            const button = document.createElement("button");
-            button.textContent = playerData.isTowerUnlocked(tower)
-                ? `${tower} (Unlocked)`
-                : `Unlock ${tower}`;
-            button.disabled = playerData.isTowerUnlocked(tower);
-
-            button.onclick = () => {
-                unlockTower(tower);
-                updateResearchContent("towers"); // refresh after unlock
-            };
-
-            content.appendChild(button);
-        });
+      content.innerHTML = "<h2>Tower Unlocks</h2>";
+  
+      const towers = [
+          {
+              name: "Artillery",
+              description: "Long-range splash damage tower. Slow fire rate.",
+              stats: { damage: "High", range: "Very Long", speed: "Slow" },
+              image: "images/artillery.png"
+          },
+          {
+              name: "Rail Gun",
+              description: "High damage to large enemies. Ignores armor.",
+              stats: { damage: "Massive", range: "Long", speed: "Very Slow" },
+              image: "images/railgun.png"
+          },
+          {
+              name: "EMP",
+              description: "Disables enemy abilities temporarily.",
+              stats: { damage: "None", range: "Medium", speed: "Moderate" },
+              image: "images/emp.png"
+          },
+          {
+              name: "Shield",
+              description: "Generates a protective shield over nearby towers.",
+              stats: { health: "Moderate", radius: "Large", duration: "Until destroyed" },
+              image: "images/shield.png"
+          },
+          {
+              name: "Proximity Mine",
+              description: "Deploys air mines to damage or disable flying enemies.",
+              stats: { damage: "Moderate", range: "Auto-deploy", speed: "Passive" },
+              image: "images/proximity.png"
+          },
+      ];
+  
+      towers.forEach(tower => {
+          const towerCard = document.createElement("div");
+          towerCard.classList.add("tower-card");
+  
+          // Image
+          const image = document.createElement("img");
+          image.src = tower.image;
+          image.alt = tower.name;
+          image.classList.add("tower-image");
+  
+          // Info container (name, desc, stats, unlock)
+          const infoContainer = document.createElement("div");
+          infoContainer.classList.add("tower-info");
+  
+          // Name
+          const title = document.createElement("h3");
+          title.classList.add("tower-name");
+          title.textContent = tower.name;
+  
+          // Description
+          const desc = document.createElement("p");
+          desc.classList.add("tower-description");
+          desc.textContent = tower.description;
+  
+          // Stats
+          const statsList = document.createElement("ul");
+          statsList.classList.add("tower-stats");
+          for (let stat in tower.stats) {
+              const li = document.createElement("li");
+              li.textContent = `${stat.charAt(0).toUpperCase() + stat.slice(1)}: ${tower.stats[stat]}`;
+              statsList.appendChild(li);
+          }
+  
+          // Unlock button
+          const button = document.createElement("button");
+          button.classList.add("unlock-button");
+          const unlocked = playerData.isTowerUnlocked(tower.name);
+          button.textContent = unlocked ? "Unlocked" : "Unlock";
+          button.disabled = unlocked;
+  
+          button.onclick = () => {
+              unlockTower(tower.name);
+              updateResearchContent("towers");
+          };
+  
+          // Assemble info
+          infoContainer.appendChild(title);
+          infoContainer.appendChild(desc);
+          infoContainer.appendChild(statsList);
+          infoContainer.appendChild(button);
+  
+          // Assemble card
+          towerCard.appendChild(image);
+          towerCard.appendChild(infoContainer);
+  
+          content.appendChild(towerCard);
+      });
     } else {
         content.innerHTML = `<h2>${tabName}</h2><p>Coming soon...</p>`;
     }
