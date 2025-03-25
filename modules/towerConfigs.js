@@ -7,6 +7,9 @@ import {
     RailGunTower,
     CorrosionTower,
     ShieldTower,
+    EnergyCrystalTower,
+    MissileTower,
+    SlowingTower,
     } from './towers.js'
 
 function formatStats(instance, extras = {}) {
@@ -129,6 +132,63 @@ export const towerConfigs = {
                 "Health": instance.health,
                 "Armor": instance.armor,
                 "Effect": "Makes nearby towers immune to damage and targeting"
+            }
+        }
+    },
+
+    "Energy Crystal Tower": {
+        class: EnergyCrystalTower,
+        image: "images/energycrystal.png",
+        description: "Boosts nearby towers’ damage, attack speed, and ability cooldowns. Does not attack.",
+        getStats: () => {
+            const instance = new EnergyCrystalTower(0, 0)
+            return {
+                "Buff Radius": instance.buffRadius + " tiles",
+                "Damage Boost": "+20%",
+                "Attack Speed Boost": "15% faster",
+                "Cooldown Reduction": "15% faster abilities",
+                "Health": instance.health,
+                "Armor": instance.armor
+            }
+        }
+    },
+
+    "Missile Tower": {
+        class: MissileTower,
+        image: "images/antiair.png",
+        description: "Launches guided missiles at air units. Long range, medium damage. Cannot target ground units.",
+        getStats: () => {
+            const instance = new AntiAirMissileTower(0, 0)
+            return {
+                "Damage": instance.damage,
+                "Range": instance.range + " tiles",
+                "Attack Speed": instance.attackSpeed + "s",
+                "Targets Air": "Yes",
+                "Targets Ground": "No",
+                "Health": instance.health,
+                "Armor": instance.armor
+            }
+        }
+    },
+
+    "Slowing Tower": {
+        class: SlowingTower,
+        image: "images/slowing.png",
+        description: "Fires ice projectiles that stun and slow enemies. Slows nearby enemies with splash on impact.",
+        getStats: () => {
+            const instance = new SlowingTower(0, 0)
+            return {
+                "Damage": instance.damage,
+                "Range": instance.range + " tiles",
+                "Attack Speed": instance.attackSpeed + "s",
+                "Slow Amount": "-40%",
+                "Slow Duration": (instance.slowDuration / 1000) + "s",
+                "Stun Duration": (instance.stunDuration / 1000) + "s",
+                "Splash Radius": instance.splashRadius + " tiles",
+                "Targets Air": "No",
+                "Targets Ground": "Yes",
+                "Health": instance.health,
+                "Armor": instance.armor
             }
         }
     },

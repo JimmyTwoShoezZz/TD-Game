@@ -23,7 +23,7 @@ const tileColors = {
 };
 
 // Tile size
-const TILE_SIZE = 50;
+export let tileSize = 50
 
 // Game map (Grid layout)
 export const MAP_GRID = [
@@ -45,17 +45,17 @@ export function renderMap() {
     const ctx = canvas.getContext("2d");
 
     // Set canvas size based on map grid
-    canvas.width = MAP_GRID[0].length * TILE_SIZE;
-    canvas.height = MAP_GRID.length * TILE_SIZE;
+    canvas.width = MAP_GRID[0].length * tileSize;
+    canvas.height = MAP_GRID.length * tileSize;
 
     // Loop through the grid and draw each tile
     for (let row = 0; row < MAP_GRID.length; row++) {
         for (let col = 0; col < MAP_GRID[row].length; col++) {
             let tileType = MAP_GRID[row][col];
             ctx.fillStyle = tileColors[tileType] || "#000"; // Default to black if undefined
-            ctx.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
             ctx.strokeStyle = "#222"; // Grid lines
-            ctx.strokeRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            ctx.strokeRect(col * tileSize, row * tileSize, tileSize, tileSize);
         }
     }
 }

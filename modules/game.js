@@ -43,17 +43,20 @@ export const towers = []
 export function spawnEnemy() {
     const path = generateEnemyPath()
   
-    const grunt = new Enemy({
-        id: crypto.randomUUID(),
-        name: 'Grunt',
-        isAlive: true,
-        x: path[0].x,
-        y: path[0].y,
-        health: 30,
-        armor: 1,
-        speed: 1,
-        isAir: false,
-        path
+    const enemy = new Enemy({
+      id: crypto.randomUUID(),       // or however you're assigning IDs
+      name: "Infantry",              // enemy name
+      moveType: "ground",            // "ground" or "air"
+      bioType: "biological",         // "biological" or "mechanical"
+      species: "human",              // "human" or "alien"
+      size: "small",                 // "small", "medium", "large"
+      path: path,               // array of {x, y} waypoints
+      damage: 5,
+      range: 1.5,
+      attackSpeed: 1.2,
+      health: 50,
+      armor: 0,
+      speed: 2.5
     })
-    enemies.push(grunt)
+    enemies.push(enemy)
 }

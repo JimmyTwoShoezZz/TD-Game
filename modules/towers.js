@@ -1,3 +1,6 @@
+import { applyBuff, removeBuff} from "./buffs.js"
+import { isTileBlocked, tileSize } from './maps.js'
+
 export class Tower {
     constructor({ id, x, y, name, type, damage, range, attackSpeed, canAttackGround, canAttackAir, health, armor, lastAttackTime, target }) {
         this.id = id     // Unique ID
@@ -15,9 +18,11 @@ export class Tower {
 
         // Tower state
         this.health = health
+        this.maxhealth = health
         this.armor = armor
         this.lastAttackTime = 0
         this.target = null
+        this.activeBuffs = new Set()
 
         // Shield-related state
         this.invulnerable = false   // For UI only
@@ -74,6 +79,36 @@ export class Tower {
 
     destroy() {
 
+    }
+
+    draw(ctx) {
+        console.log("DRAWING:", {
+          x: this.x,
+          y: this.y,
+          tileSize,
+          pxX: this.x * tileSize,
+          pxY: this.y * tileSize
+        })
+      
+        ctx.fillStyle = "lime"
+        ctx.fillRect(this.x * tileSize, this.y * tileSize, tileSize, tileSize)
+    }
+
+    getColorByType() {
+        switch (this.type) {
+            case "machineGun": return "gray"
+            case "shotgun": return "brown"
+            case "flamethrower": return "orange"
+            case "artillery": return "green"
+            case "railgun": return "purple"
+            case "corrosion": return "lime"
+            case "shield": return "blue"
+            case "bulldozer": return "black"
+            case "energyCrystal": return "cyan"
+            case "slowing": return "aqua"
+            case "missile": return "red"
+            default: return "white"
+        }
     }
 }
 
@@ -215,7 +250,6 @@ export class FlamethrowerTower extends Tower {
     }
 }
 
-import { isTileBlocked } from './maps.js'
 export class BulldozerTower extends Tower {
     constructor(x, y) {
       super({
@@ -490,10 +524,9 @@ export class ShieldTower extends Tower {
     update(currentTime, enemies) {
         const allTowers = gameState.towers
 
-        // Reset all towers to vulnerable and targetable
+        // Reset all towers to vulnerable and not buffed
         allTowers.forEach(t => {
-            t.invulnerable = false
-            t.targetable = true
+            removeBuff(t, "shield")
         })
 
         // Find towers in range and apply shield effects
@@ -507,8 +540,7 @@ export class ShieldTower extends Tower {
 
         // Apply shield effects
         this.protectedTowers.forEach(t => {
-            t.invulnerable = true  // for UI display
-            t.targetable = false   // makes it untargetable
+            applyBuff(t, "shield")
         })
     }
 
@@ -531,6 +563,162 @@ export class ShieldTower extends Tower {
     }
 }
 
+export class EnergyCrystalTower extends Tower {
+    constructor(x, y) {
+        super({
+            id: crypto.randomUUID(),
+            name: "Energy Crystal Tower",
+            x,
+            y,
+            type: "energyCrystal",
+            damage: 0, // no attack
+            range: 3,  // buff radius
+            attackSpeed: 0,
+            canAttackAir: false,
+            canAttackGround: false,
+            health: 120,
+            armor: 1,
+            lastAttackTime: 0,
+            target: null
+        })
+
+        this.buffRadius = 3
+        this.damageBoost = 1.2              // +20% damage
+        this.attackSpeedBoost = 0.85        // 15% faster attacks
+        this.cooldownBoost = 0.85           // 15% faster ability cooldowns
+        this.affectedTowers = new Set()
+    }
+
+    update(currentTime, enemies) {
+        const allTowers = gameState.towers
+
+        // Step 1: Revert previous buffs
+        for (const tower of this.affectedTowers) {
+            if (tower && !this.isInBuffRange(tower)) {
+                removeBuff(tower, "energy")
+                this.affectedTowers.delete(tower)
+            }
+        }
+
+        // Step 2: Apply buffs to towers in range
+        for (const tower of allTowers) {
+            if (tower.id === this.id) continue
+            if (!this.isInBuffRange(tower)) continue
+            if (!this.affectedTowers.has(tower)) {
+                applyBuff(tower, "energy")
+                this.affectedTowers.add(tower)
+            }
+        }
+    }
+
+    isInBuffRange(tower) {
+        const dx = tower.x - this.x
+        const dy = tower.y - this.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        return dist <= this.buffRadius
+    }
+
+    destroy() {
+        for (const tower of this.affectedTowers) {
+            this.removeBuff(tower)
+        }
+        this.affectedTowers.clear()
+        console.log("✨ Energy Crystal Tower destroyed, buffs removed.")
+        playTowerDestruction(this)
+    }
+}
+
+export class MissileTower extends Tower {
+    constructor(x, y) {
+        super({
+            id: crypto.randomUUID(),
+            name: "Missile Tower",
+            x,
+            y,
+            type: "missile",
+            damage: 15,
+            range: 6,
+            attackSpeed: 2, // seconds
+            canAttackAir: true,
+            canAttackGround: false,
+            health: 100,
+            armor: 1,
+            lastAttackTime: 0,
+            target: null
+        })
+    }
+
+    update(currentTime, enemies) {
+        if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
+
+        const validTargets = enemies.filter(e => this.canTarget(e))
+        if (validTargets.length === 0) return
+
+        const target = validTargets[0]
+        this.attack(target)
+        this.lastAttackTime = currentTime
+
+        console.log(`🎯 Missile launched at ${target.name}!`)
+    }
+
+    attack(enemy) {
+        // Later we can add animation, delay, etc.
+        enemy.takeDamage(this.damage)
+    }
+}
+
+export class SlowingTower extends Tower {
+    constructor(x, y) {
+        super({
+            id: crypto.randomUUID(),
+            name: "Slowing Tower",
+            x,
+            y,
+            type: "slowing",
+            damage: 4,
+            range: 4,
+            attackSpeed: 2.5, // medium delay between shots
+            canAttackAir: false,
+            canAttackGround: true,
+            health: 100,
+            armor: 1,
+            lastAttackTime: 0,
+            target: null
+        })
+            this.slowAmount = 0.4 // 40% speed reduction
+            this.slowDuration = 3000 // in milliseconds (3 seconds)
+            this.stunDuration = 1000 // 1 second stun
+            this.splashRadius = 1.5 // slow nearby enemies
+    }
+    update(currentTime, enemies) {
+        if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
+        const validTargets = enemies.filter(e => this.canTarget(e))
+        if (validTargets.length === 0) return
+        const target = validTargets[0]
+        this.shatterImpact(currentTime, target, enemies)
+        this.lastAttackTime = currentTime
+        console.log(`💥 Slowing Tower hits ${target.name} with ice ball!`)
+    }
+    
+    shatterImpact(currentTime, mainTarget, allEnemies) {
+        // Deal small damage
+        mainTarget.takeDamage(this.damage)
+        // Apply stun and slow to main target
+        mainTarget.applyStun(this.stunDuration)
+        mainTarget.applySlow(this.slowAmount, this.slowDuration)
+        // Splash slow to nearby enemies (excluding main target)
+        for (const enemy of allEnemies) {
+            if (enemy === mainTarget || !this.canTarget(enemy)) continue
+            const dx = enemy.x - mainTarget.x
+            const dy = enemy.y - mainTarget.y
+            const dist = Math.sqrt(dx * dx + dy * dy)
+            if (dist <= this.splashRadius) {
+                enemy.applySlow(this.slowAmount, this.slowDuration)
+                console.log(`💦 Splash slow applied to ${enemy.name}`)
+            }
+        }
+    }    
+}
 
 
 

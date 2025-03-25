@@ -321,3 +321,33 @@ function upgradeArmorBullets() {
 function upgradeArmorBiological() {
     console.log("🔧 Upgrading armor vs biological attacks");
 }
+
+export function coreTowerPanel(tower) {
+    const buttons = []
+  
+    buttons.push({ id: "btn-1", label: tower.attack ? "Attack" : "", action: tower.attack ? () => enterAttackMode(tower) : null })
+    buttons.push({ id: "btn-2", label: tower.attack ? "Stop Attack" : "", action: tower.attack ? () => stopAttackCommand(tower) : null })
+    buttons.push({ id: "btn-3", label: tower.health < tower.maxHealth ? "Repair" : "", action: tower.health < tower.maxHealth ? () => repairTower(tower) : null })
+    buttons.push({ id: "btn-4", label: tower.canMove ? "Move" : "", action: tower.canMove ? () => enterMoveMode(tower) : null })
+    
+    // Buttons 5–8: Reserved
+    for (let i = 5; i <= 8; i++) {
+        buttons.push({ id: `btn-${i}`, label: "", action: null })
+    }
+
+    buttons.push({ id: "btn-9", label: "Delete", action: () => openDeleteTowerMenu(tower) })
+    
+    // Buttons 10–11: Reserved
+    for (let i = 10; i <= 11; i++) {
+        buttons.push({ id: `btn-${i}`, label: "", action: null })
+    }
+
+    buttons.push({ id: "btn-12", label: "Deselect",
+        action: () => {
+            resetCommandPanel()
+            initializeDefaultMenu()
+            gameState.selectedObject = null
+        }
+    })
+    updateCommandPanel(buttons)
+}

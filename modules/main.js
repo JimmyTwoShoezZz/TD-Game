@@ -11,6 +11,10 @@ import {
 
 } from "./abilities.js"
 
+import {
+
+} from "./buffs.js"
+
 // Collision detection between enemies and projectiles
 import {
 
@@ -143,7 +147,7 @@ function gameLoop(currentTime) {
         if (enemy.alive) {
             enemy.updateBurn(deltaTime, currentTime)
             enemy.updateCorrosion(deltaTime, currentTime)
-            enemy.target(gameState)
+            enemy.aquireTarget(gameState)
             if (enemy.target && enemy.distanceTo(enemy.target) <= enemy.range) {
                 enemy.attack(currentTime)
             } else {
@@ -153,12 +157,11 @@ function gameLoop(currentTime) {
     }
   
     // === RENDER ===
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    renderMap()
-
-    for (const enemy of enemies) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)       // Clear the canvas
+    renderMap()                                            // Render the map
+    gameState.towers.forEach(tower => { tower.draw(ctx) }) // Draw each tower
+    for (const enemy of gameState.enemies) {                         // Draw each enemy
         if (!enemy.alive) continue
-    
         ctx.beginPath()
         ctx.arc(
         enemy.x * 50 + 25,
@@ -171,9 +174,8 @@ function gameLoop(currentTime) {
         ctx.fill()
         ctx.strokeStyle = '#000'
         ctx.stroke()
+        gameState.enemies.push(testEnemy)
     }
-
-    // Loop again
     requestAnimationFrame(gameLoop)
 }
 
@@ -201,3 +203,11 @@ export function startNextWave() {
         }
     }, 1000);
 }
+
+import { MachineGunTower } from './towers.js'
+import { selectPlacedTower } from './handlers.js'
+window.addEventListener("load", () => {
+    const testTower = new MachineGunTower(5, 5)
+    gameState.towers.push(testTower)
+    selectPlacedTower(testTower)
+})

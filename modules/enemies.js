@@ -5,7 +5,7 @@ export class Enemy {
         this.x = x         // Grid x position
         this.y = y         // Grid y position
         this.name = name   // Display name
-        this.moveType = moveType.toLowerCase()   // e.g. "ground", "air"
+        this.moveType = (moveType || "unknown").toLowerCase()   // e.g. "ground", "air"
         this.bioType = bioType.toLowerCase()     // e.g. "biological", "mechanical"
         this.species = species.toLowerCase()     // e.g. "human", "alien"
         this.size = size.toLowerCase()           // e.g. "small", "medium", "large"
@@ -40,6 +40,8 @@ export class Enemy {
     }
 
     move(currentTime, deltaTime) {
+        if (this.isStunned(currentTime)) return
+        this.updateSlow(deltaTime)
         if (!this.path.length || this.currentPathIndex >= this.path.length) return
         const target = this.path[this.currentPathIndex]
         const dx = target.x - this.x
@@ -59,13 +61,13 @@ export class Enemy {
         }
     }
 
-    target(gameState) {
+    aquireTarget(gameState) {
         const possibleTargets = gameState.towers.filter(t => t.targetable)
         if (possibleTargets.length === 0) return null
     
         // Example: pick the closest
         let closest = null
-        let minDist = Infinity
+        let minDist = this.range
         for (const tower of possibleTargets) {
             const dx = tower.x - this.x
             const dy = tower.y - this.y
@@ -143,5 +145,32 @@ export class Enemy {
                 this.corrosionValue = 0
             }
         }
+    }
+
+    applySlow(percent, duration) {
+        // Clamp to 0.1 speed at minimum
+        const newSpeed = Math.max(0.1, this.speed * (1 - percent))
+        this.speed = newSpeed
+        this.slowTimer = duration
+        this.originalSpeed = this.originalSpeed || this.speed
+        this.lastSlowTick = Date.now()
+    }
+    
+    updateSlow(deltaTime) {
+        if (this.slowTimer > 0) {
+            this.slowTimer -= deltaTime
+            if (this.slowTimer <= 0) {
+                this.speed = this.originalSpeed
+                this.originalSpeed = null
+            }
+        }
+    }
+    
+    applyStun(duration) {
+        this.stunnedUntil = Date.now() + duration
+    }
+    
+    isStunned(currentTime) {
+        return this.stunnedUntil && currentTime < this.stunnedUntil
     }
 }

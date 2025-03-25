@@ -1,9 +1,40 @@
 import { showSettingsWindow, hideSettingsWindow, hideResearchWindow } from "./ui.js"
 import { updateResearchContent } from "./towerResearchUI.js"
 import { updateSettingsContent } from "./settingsUI.js"
-
+import { initializeDefaultMenu } from './commandpanel.js'
 import { pauseGame, resumeGame } from "./game.js"
 import { gameState } from "./gameState.js"
+import { tileSize } from './maps.js'
+
+// Canvas click listener
+const canvas = document.getElementById("game-canvas")
+canvas.addEventListener("click", handleCanvasClick)
+
+export function handleCanvasClick(event) {
+    const canvas = event.target
+    const rect = canvas.getBoundingClientRect()
+    const scale = canvas.width / rect.width
+    const mouseX = (event.clientX - rect.left) * scale
+    const mouseY = (event.clientY - rect.top) * scale
+
+    const tileX = Math.floor(mouseX / tileSize)
+    const tileY = Math.floor(mouseY / tileSize)
+
+    // Try to select a tower at that location
+    const clickedTower = gameState.towers.find(t => t.x === tileX && t.y === tileY)
+
+    if (clickedTower) {
+        selectPlacedTower(clickedTower)
+        return
+    }
+
+   // If clicked nothing relevant, return to default UI
+    gameState.selectedObject = null
+    initializeDefaultMenu()
+}
+
+
+
 
 document.getElementById("close-research").addEventListener("click", () => {
   hideResearchWindow()
@@ -125,9 +156,14 @@ document.getElementById("close-settings").addEventListener("click", () => {
 
 
 
-  export function selectTower(towerType) {
-    gameState.selectedTowerType = towerType;
-    gameState.selectedObject = null;
+export function selectTower(towerType) {
+    gameState.selectedTowerType = towerType
+    gameState.selectedObject = null
+}
 
-    // Show preview tile or ghost tower if applicable
+import { coreTowerPanel } from './commandpanel.js'
+export function selectPlacedTower(tower) {
+    gameState.selectedTowerType = null
+    gameState.selectedObject = tower
+    coreTowerPanel(tower)
 }
