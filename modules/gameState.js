@@ -1,3 +1,5 @@
+import { updateUIBlockerState, updatePauseButtonIcon } from './ui.js'
+
 export const PHASES = {
     PLANNING: 'planning',
     WAVE: 'wave',
@@ -77,4 +79,22 @@ export function resetGameState() {
     gameState.isAttackMode = false
     gameState.isManualTargetAssigned = false
     gameState.commandPanelMode = 'default'
+}
+
+export function pauseGame(reason = 'user') {
+    if (!gameState.paused) {
+        gameState.paused = true
+        gameState.pauseReason = reason
+        updateUIBlockerState()
+        updatePauseButtonIcon()
+    }
+}
+
+export function resumeGame(force = false) {
+    if (gameState.paused) {
+        gameState.paused = false
+        gameState.pauseReason = null
+        updateUIBlockerState()
+        updatePauseButtonIcon()
+    }
 }

@@ -2,8 +2,7 @@ import { showSettingsWindow, hideSettingsWindow, hideResearchWindow } from "./ui
 import { updateResearchContent } from "./towerResearchUI.js"
 import { updateSettingsContent } from "./settingsUI.js"
 import { initializeDefaultMenu } from './commandpanel.js'
-import { pauseGame, resumeGame } from "./game.js"
-import { gameState } from "./gameState.js"
+import { gameState, pauseGame, resumeGame } from "./gameState.js"
 import { tileSize } from './maps.js'
 
 // Canvas click listener

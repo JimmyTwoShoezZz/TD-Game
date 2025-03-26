@@ -1,6 +1,6 @@
 import { playerData } from './playerData.js'
 import { unlockTower } from './research.js'
-import { pauseGame, resumeGame } from './game.js'
+import { pauseGame, resumeGame } from './gameState.js'
 import { initializeTowerResearchUI, updateResearchContent } from './towerResearchUI.js'
 import { updateSettingsContent } from './settingsUI.js'
 

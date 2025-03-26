@@ -45,19 +45,13 @@ import {
     Enemy
 } from "./enemies.js"
 
-// Game logic
-import {
-    enemies,
-    spawnEnemy,
-    resumeGame,
-    pauseGame,
-} from "./game.js"
-
 import {
     gameState,
     PHASES,
     resetGameState,
-    resetInteractionModes
+    resetInteractionModes,
+    pauseGame,
+    resumeGame,
 } from "./gameState.js"
 
 //Handles player actions
@@ -160,7 +154,7 @@ function gameLoop(currentTime) {
     ctx.clearRect(0, 0, canvas.width, canvas.height)       // Clear the canvas
     renderMap()                                            // Render the map
     gameState.towers.forEach(tower => { tower.draw(ctx) }) // Draw each tower
-    for (const enemy of gameState.enemies) {                         // Draw each enemy
+    for (const enemy of gameState.enemies) {               // Draw each enemy
         if (!enemy.alive) continue
         ctx.beginPath()
         ctx.arc(
@@ -197,8 +191,6 @@ export function startNextWave() {
             gameState.phase = PHASES.WAVE;
             gameState.currentWave += 1;
             gameState.wavesRemaining -= 1;
-
-            spawnEnemy();
             initializeDefaultMenu();
         }
     }, 1000);

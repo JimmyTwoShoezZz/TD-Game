@@ -158,7 +158,7 @@ export const towerConfigs = {
         image: "images/antiair.png",
         description: "Launches guided missiles at air units. Long range, medium damage. Cannot target ground units.",
         getStats: () => {
-            const instance = new AntiAirMissileTower(0, 0)
+            const instance = new MissileTower(0, 0)
             return {
                 "Damage": instance.damage,
                 "Range": instance.range + " tiles",
