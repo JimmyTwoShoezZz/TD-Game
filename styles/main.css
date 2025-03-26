@@ -5,14 +5,14 @@
 @import url('ui.css');
 
 /* Specific components/modules */
-@import url('top-bar.css');
-@import url('command-panel.css');
+@import url('topBar.css');
+@import url('commandPanel.css');
 @import url('minimap.css');
-@import url('info-panel.css');
+@import url('infoPanel.css');
 @import url('overlayWindow.css');
-@import url('message-log.css');
-@import url('title-screen.css');
-@import url('towerresearch.css');
+@import url('messageLog.css');
+@import url('titleScreen.css');
+@import url('towerResearch.css');
 
 * {
     margin: 0;
