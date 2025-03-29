@@ -1,6 +1,6 @@
 import { gameState, resetInteractionModes } from './gameState.js'
 import { playerData } from './playerData.js'
-import { playTowerDestruction } from './towers.js'
+import { playTowerDestruction, removeTower } from './towers.js'
 import { selectTower } from './handlers.js'
 import { startNextWave } from './main.js'
 import { showResearchWindow } from './ui.js'
@@ -41,6 +41,10 @@ export function initializeDefaultMenu() {
 
 export function updateCommandPanel(options) {
     const panel = document.querySelector(".command-grid")
+    options.forEach(option => {
+        if (option.skip) return
+        const button = document.getElementById(option.id)
+    })
     while (panel.firstChild) {
         panel.removeChild(panel.firstChild)
     }
@@ -66,7 +70,7 @@ export function setCommandButton(id, label, onClick) {
     if (!button) return;
   
     button.innerText = label || '';
-    button.disabled = !label;
+    button.disabled = !(label && onClick);
   
     // Clear previous click events
     button.onclick = null;
@@ -108,7 +112,7 @@ export function resetCommandPanel() {
         id: `btn-${i + 1}`,
         label: towerName || "",
         action: towerName
-          ? () => enterTowerPlacementMode(towerConfigs[towerName].class)
+          ? () => selectTowerToBuild(towerConfigs[towerName].class)
           : null
       });
     }
@@ -144,6 +148,15 @@ export function resetCommandPanel() {
     updateCommandPanel(options);
   }
 
+  function cancelRepairMode() {
+    gameState.selectedObject = null
+    gameState.isRepairMode = false
+    initializeDefaultMenu()
+
+    const infoPanel = document.getElementById("info-panel")
+    if (infoPanel) infoPanel.innerHTML = ""
+}
+
 export function openRepairTowerMenu() {
     setCommandPanelMode('default')
     updateCommandPanel([
@@ -165,6 +178,24 @@ export function openRepairTowerMenu() {
 export function enterRepairMode() {
     resetInteractionModes()
     gameState.isRepairMode = true
+
+    updateCommandPanel([
+        { id: "btn-1", label: "Click a tower to repair", action: null, disabled: true },
+        { id: "btn-2", label: "", action: null },
+        { id: "btn-3", label: "", action: null },
+        { id: "btn-4", label: "", action: null },
+        { id: "btn-5", label: "", action: null },
+        { id: "btn-6", label: "", action: null },
+        { id: "btn-7", label: "", action: null },
+        { id: "btn-8", label: "", action: null },
+        { id: "btn-9", label: "", action: null },
+        { id: "btn-10", label: "", action: null },
+        { id: "btn-11", label: "", action: null },
+        { id: "btn-12", label: "Cancel", action: cancelRepairMode }
+    ])
+
+    const infoPanel = document.getElementById("info-panel")
+    if (infoPanel) infoPanel.innerHTML = ""
 }
 
 export function promptRepairAllConfirmation() {
@@ -228,11 +259,68 @@ export function repairAllTowers() {
     }
 }
 
-export function openDeleteTowerMenu() {
+export function updateRepairMenu() {
+    const tower = gameState.selectedObject
+    const btn1 = document.getElementById("btn-1")
+    if (!btn1) return
+
+    if (!tower || !gameState.towers.includes(tower)) {
+        // Phase 1: No tower selected
+        btn1.textContent = "Select a Tower"
+        btn1.disabled = true
+        btn1.classList.add("command-button-disabled")
+        btn1.classList.remove("empty-button")
+        btn1.onclick = null
+    } else {
+        // Phase 2: Tower selected – confirm repair
+        const missingHealth = tower.maxHealth - tower.health
+        const costToRepair = Math.ceil(missingHealth * 0.5)
+
+        btn1.textContent = `Repair ${tower.name} (${costToRepair} Minerals)`
+        btn1.disabled = false
+        btn1.classList.remove("command-button-disabled")
+        btn1.classList.remove("empty-button")
+        btn1.onclick = () => {
+            if (gameState.minerals >= costToRepair) {
+                tower.health = tower.maxHealth
+                gameState.minerals -= costToRepair
+            } else {
+                console.log("🚫 Not enough minerals to repair.")
+                // (Optional: display message in info panel)
+            }
+
+            gameState.selectedObject = null
+            updateRepairMenu()  // Stay in repair mode, allow more repairs
+        }
+    }
+
+    const infoPanel = document.getElementById("info-panel")
+    if (infoPanel) infoPanel.innerHTML = ""
+}
+
+function cancelDeleteMode() {
+    const wasFromTower = gameState.isDeleteModeFromTower
+    const prevTower = gameState.previousSelectedObject
+
+    gameState.selectedObject = wasFromTower && prevTower ? prevTower : null
+    gameState.isDeleteModeFromTower = false
+    gameState.previousSelectedObject = null
+
+    if (gameState.selectedObject) {
+        coreTowerPanel(gameState.selectedObject)
+    } else {
+        initializeDefaultMenu()
+    }
+}
+
+
+export function openDeleteTowerMenu(tower = null) {
     setCommandPanelMode('delete'); // sets isDeleteMode and resets others
-    gameState.selectedObject = null;
+    gameState.previousSelectedObject = tower || null
+    gameState.selectedObject = tower || null
+    gameState.isDeleteModeFromTower = gameState.towers.includes(tower)
     updateCommandPanel([
-        { id: "btn-1", label: "Select A Tower", action: null, disabled: true },
+        { id: "btn-1", label: "", action: null },
         { id: "btn-2", label: "", action: null },
         { id: "btn-3", label: "", action: null },
         { id: "btn-4", label: "", action: null },
@@ -245,55 +333,49 @@ export function openDeleteTowerMenu() {
         { id: "btn-11", label: "", action: null },
         { id: "btn-12", label: "Cancel", action: cancelDeleteMode }
     ])
+    updateDeleteMenu()
 }
 
 export function updateDeleteMenu() {
     const tower = gameState.selectedObject
-    if (!tower) return
+    const btn1 = document.getElementById("btn-1")
+    if (!btn1) return
 
-    const infoPanel = document.getElementById("info-panel")
-    infoPanel.innerHTML = "" // Clear the panel
-
-    const message = document.createElement("p")
-    message.textContent = `Delete ${tower.name}?`
-    infoPanel.appendChild(message)
-
-    const confirmBtn = document.createElement("button")
-    confirmBtn.textContent = "Confirm Delete"
-    confirmBtn.onclick = () => {
-        confirmDeleteTower()          // Removes the tower
-        infoPanel.innerHTML = ""      // Clear panel
-        resetCommandPanel()
-        openDeleteTowerMenu()         // Reset menu for next delete
-    };
-    infoPanel.appendChild(confirmBtn)
-
-    const cancelBtn = document.createElement("button")
-    cancelBtn.textContent = "Cancel"
-    cancelBtn.onclick = () => {
-        gameState.selectedObject = null
-        infoPanel.innerHTML = ""      // Clear confirmation
-        resetCommandPanel()
-        openDeleteTowerMenu()         // Stay in Delete Mode
+    if (!tower || !gameState.towers.includes(tower)) {
+        // Phase 1: No tower selected yet
+        btn1.textContent = "Select a Tower"
+        btn1.disabled = true
+        btn1.classList.add("command-button-disabled")
+        btn1.classList.remove("empty-button")
+        btn1.onclick = null
+    } else {
+        // Phase 2: Tower selected – show delete confirmation
+        btn1.textContent = `Delete ${tower.name}`
+        btn1.disabled = false
+        btn1.classList.remove("command-button-disabled")
+        btn1.classList.remove("empty-button")
+        btn1.onclick = confirmDeleteTower
     }
-    infoPanel.appendChild(cancelBtn)
+
+    // Clear any leftover content in info panel
+    const infoPanel = document.getElementById("info-panel")
+    if (infoPanel) infoPanel.innerHTML = ""
 }
+
 
 function confirmDeleteTower() {
     const tower = gameState.selectedObject
-    if (!tower) return
+    if (!tower || !gameState.towers.includes(tower)) return
 
     playTowerDestruction(tower, { isManual: true })
     gameState.selectedObject = null
-    resetCommandPanel()
-    openDeleteTowerMenu()
-}
 
-function cancelDeleteMode() {
-    resetCommandPanel()
-    setCommandPanelMode('default')
-    initializeDefaultMenu()
-    gameState.selectedObject = null
+    if (gameState.isDeleteModeFromTower) {
+        gameState.isDeleteModeFromTower = false  // reset it
+        initializeDefaultMenu()
+    } else {
+        updateDeleteMenu()
+    }
 }
 
 export function openGlobalUpgradesMenu() {
@@ -342,12 +424,20 @@ export function coreTowerPanel(tower) {
         buttons.push({ id: `btn-${i}`, label: "", action: null })
     }
 
-    buttons.push({ id: "btn-12", label: "Deselect",
+    buttons.push({
+        id: "btn-12",
+        label: "Deselect",
         action: () => {
+            gameState.selectedObject = null
             resetCommandPanel()
             initializeDefaultMenu()
-            gameState.selectedObject = null
+            const infoPanel = document.getElementById("info-panel")
+            if (infoPanel) infoPanel.innerHTML = ""
         }
     })
     updateCommandPanel(buttons)
 }
+
+export function selectTowerToBuild(towerClass) {
+    gameState.selectedTowerType = towerClass
+  }

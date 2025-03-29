@@ -65,7 +65,7 @@ export function showSettingsWindow() {
     }, 4000);
   }
 
-  import { gameState } from './game.js'
+  import { gameState } from './gameState.js'
 
   export function updateUIBlockerState() {
     const overlay = document.getElementById("ui-blocker-overlay");

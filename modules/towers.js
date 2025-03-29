@@ -82,17 +82,44 @@ export class Tower {
     }
 
     draw(ctx) {
-        console.log("DRAWING:", {
-          x: this.x,
-          y: this.y,
-          tileSize,
-          pxX: this.x * tileSize,
-          pxY: this.y * tileSize
-        })
-      
-        ctx.fillStyle = "lime"
-        ctx.fillRect(this.x * tileSize, this.y * tileSize, tileSize, tileSize)
+        const padding = tileSize * 0.15
+        const size = tileSize - padding * 2
+    
+        const px = this.x * tileSize + padding
+        const py = this.y * tileSize + padding
+        const color = this.getColorByType()
+    
+        // Triangle path
+        ctx.beginPath()
+        ctx.moveTo(px + size / 2, py)         // Top point
+        ctx.lineTo(px + size, py + size)      // Bottom right
+        ctx.lineTo(px, py + size)             // Bottom left
+        ctx.closePath()
+    
+        // Fill
+        ctx.fillStyle = color
+        ctx.fill()
+    
+        // Stroke
+        ctx.lineWidth = 2
+        ctx.strokeStyle = "white"
+        ctx.stroke()
+
+        // Stroke for selected tower
+        if (gameState.selectedObject === this) {
+            ctx.strokeStyle = "lime"
+            ctx.lineWidth = 2
+            ctx.beginPath()
+            ctx.arc(
+                this.x * tileSize + tileSize / 2,
+                this.y * tileSize + tileSize / 2,
+                tileSize * 0.6, 0,
+                Math.PI * 2
+            )
+            ctx.stroke()
+        }
     }
+        
 
     getColorByType() {
         switch (this.type) {

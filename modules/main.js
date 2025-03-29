@@ -137,7 +137,7 @@ function gameLoop(currentTime) {
     }
 
     // === UPDATE ===
-    for (const enemy of enemies) {
+    for (const enemy of gameState.enemies) {
         if (enemy.alive) {
             enemy.updateBurn(deltaTime, currentTime)
             enemy.updateCorrosion(deltaTime, currentTime)
@@ -195,11 +195,3 @@ export function startNextWave() {
         }
     }, 1000);
 }
-
-import { MachineGunTower } from './towers.js'
-import { selectPlacedTower } from './handlers.js'
-window.addEventListener("load", () => {
-    const testTower = new MachineGunTower(5, 5)
-    gameState.towers.push(testTower)
-    selectPlacedTower(testTower)
-})

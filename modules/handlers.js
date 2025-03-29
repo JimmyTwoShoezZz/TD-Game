@@ -1,16 +1,16 @@
+// ===================== Imports =====================
 import { showSettingsWindow, hideSettingsWindow, hideResearchWindow } from "./ui.js"
 import { updateResearchContent } from "./towerResearchUI.js"
 import { updateSettingsContent } from "./settingsUI.js"
-import { initializeDefaultMenu } from './commandpanel.js'
+import { initializeDefaultMenu, updateDeleteMenu, coreTowerPanel, updateRepairMenu } from "./commandpanel.js"
 import { gameState, pauseGame, resumeGame } from "./gameState.js"
-import { tileSize } from './maps.js'
+import { tileSize, isTileBuildable } from "./maps.js"
 
-// Canvas click listener
+// ===================== Canvas Click =====================
 const canvas = document.getElementById("game-canvas")
 canvas.addEventListener("click", handleCanvasClick)
 
 export function handleCanvasClick(event) {
-    const canvas = event.target
     const rect = canvas.getBoundingClientRect()
     const scale = canvas.width / rect.width
     const mouseX = (event.clientX - rect.left) * scale
@@ -19,150 +19,158 @@ export function handleCanvasClick(event) {
     const tileX = Math.floor(mouseX / tileSize)
     const tileY = Math.floor(mouseY / tileSize)
 
-    // Try to select a tower at that location
-    const clickedTower = gameState.towers.find(t => t.x === tileX && t.y === tileY)
+    // === BUILD MODE ===
+    if (gameState.isBuildMode && gameState.selectedTowerType) {
+        const isOccupied = gameState.towers.some(t => t.x === tileX && t.y === tileY)
+        const canBuildHere = isTileBuildable(tileX, tileY) && !isOccupied
 
-    if (clickedTower) {
-        selectPlacedTower(clickedTower)
+        if (canBuildHere) {
+            const TowerClass = gameState.selectedTowerType
+            const newTower = new TowerClass(tileX, tileY)
+            gameState.towers.push(newTower)
+            //gameState.selectedObject = newTower
+        } else {
+            console.log("🚫 Can't build here.")
+        }
         return
     }
 
-   // If clicked nothing relevant, return to default UI
-    gameState.selectedObject = null
-    initializeDefaultMenu()
+    // === DELETE MODE, REPAIR MODE, or TOWER SELECT ===
+    const clickedTower = gameState.towers.find(t => t.x === tileX && t.y === tileY)
+    if (clickedTower) {
+        if (gameState.isDeleteMode) {
+            gameState.selectedObject = clickedTower
+            updateDeleteMenu()
+            console.log("Clicked a tower in delete mode:", clickedTower)
+        } else if (gameState.isRepairMode) {
+            const missingHealth = clickedTower.maxHealth - clickedTower.health
+            const costToRepair = Math.ceil(missingHealth * 0.5)
+        
+            if (missingHealth > 0 && gameState.minerals >= costToRepair) {
+                clickedTower.health = clickedTower.maxHealth
+                gameState.minerals -= costToRepair
+                console.log(`🛠️ Repaired ${clickedTower.name} for ${costToRepair} minerals`)
+            } else {
+                console.log("🚫 Cannot repair — full health or not enough minerals")
+            }
+        
+            // Don't select the tower, don't exit repair mode
+            return
+        } else {
+            selectPlacedTower(clickedTower)
+        }
+        return
+    }
 }
 
-
-
-
-document.getElementById("close-research").addEventListener("click", () => {
-  hideResearchWindow()
-})
+// ===================== UI Event Listeners =====================
+document.getElementById("close-research").addEventListener("click", hideResearchWindow)
 
 document.getElementById("options-btn").addEventListener("click", () => {
-  pauseGame('menu');
-  showSettingsWindow();
-});
+    pauseGame('menu')
+    showSettingsWindow()
+})
 
 document.getElementById("close-settings").addEventListener("click", () => {
     hideSettingsWindow()
     if (gameState.pauseReason === 'menu') {
-      resumeGame();
+        resumeGame()
     }
-    // Hide the index submenu
-  const indexSubmenu = document.getElementById("index-submenu")
-  if (indexSubmenu) {
-    indexSubmenu.classList.add("hidden")
-  }
-  const indexArrow = document.getElementById("index-arrow");
-    if (indexArrow) {
-    indexArrow.textContent = "▶";
-     }
+    hideIndexSubmenu()
 })
 
-  document.addEventListener("keydown", (event) => {
+// ESC key closes settings
+document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      const settingsWindow = document.getElementById("settings-window")
-      if (!settingsWindow.classList.contains("hidden")) {
-        hideSettingsWindow()
-        resumeGame()
-        const indexSubmenu = document.getElementById("index-submenu")
-        if (indexSubmenu) {
-        indexSubmenu.classList.add("hidden")
+        const settingsWindow = document.getElementById("settings-window")
+        if (!settingsWindow.classList.contains("hidden")) {
+            hideSettingsWindow()
+            resumeGame()
+            hideIndexSubmenu()
         }
-        const indexArrow = document.getElementById("index-arrow");
-        if (indexArrow) {
-        indexArrow.textContent = "▶";
-        }
-      }
     }
-  })
+})
 
-  function initializeOverlayTabListeners() {
-      bindOverlayTabs("settings-window", updateSettingsContent);
-      bindOverlayTabs("research-window", updateResearchContent);
-  }
+// ===================== Message Log =====================
+document.getElementById("messagelog-btn").addEventListener("click", () => {
+    const logWindow = document.getElementById("message-log-window")
+    const logContent = document.getElementById("message-log-content")
+    logWindow.classList.toggle("visible")
+    if (logWindow.classList.contains("visible")) {
+        logContent.scrollTop = logContent.scrollHeight
+    }
+})
 
-  function bindOverlayTabs(containerId, updateFn) {
-    document.querySelectorAll(`#${containerId} .overlay-tab:not(.static-tab)`).forEach(button => {
-      if (!button.dataset.bound) {
-        button.addEventListener('click', () => {
-          const tabName = button.dataset.tab;
-          if (tabName) {
-            updateFn(tabName);
-          } else {
-            console.warn("⚠️ No data-tab on button:", button);
-          }
-        });
-        button.dataset.bound = "true";
-      }
-    });
-  }
+document.getElementById("close-message-log").addEventListener("click", () => {
+    document.getElementById("message-log-window").classList.remove("visible")
+})
 
-  window.addEventListener("DOMContentLoaded", () => {
-    initializeOverlayTabListeners();
+// ===================== DOM Ready =====================
+window.addEventListener("DOMContentLoaded", () => {
+    initializeOverlayTabListeners()
 
-    // Index Submenu Toggle
-    const indexButton = document.querySelector('#settings-window .overlay-tab[data-tab="index"]');
-    const indexSubmenu = document.getElementById("index-submenu");
-    const indexArrow = document.getElementById("index-arrow");
+    const indexButton = document.querySelector('#settings-window .overlay-tab[data-tab="index"]')
+    const indexSubmenu = document.getElementById("index-submenu")
+    const indexArrow = document.getElementById("index-arrow")
 
     if (indexButton && indexSubmenu) {
         indexButton.addEventListener("click", () => {
-            indexSubmenu.classList.toggle("hidden");
-            indexArrow.textContent = indexSubmenu.classList.contains("hidden") ? "▶" : "▼";
-        });
+            indexSubmenu.classList.toggle("hidden")
+            indexArrow.textContent = indexSubmenu.classList.contains("hidden") ? "▶" : "▼"
+        })
     }
 
-    // Pause Button Logic
-    const pauseButton = document.getElementById("pause-btn");
-
+    const pauseButton = document.getElementById("pause-btn")
     if (pauseButton) {
         pauseButton.addEventListener("click", () => {
-            const settingsVisible = !document.getElementById("settings-window").classList.contains("hidden");
-
-            if (settingsVisible) {
-                return; // Don't toggle game pause if settings window is open
+            const settingsVisible = !document.getElementById("settings-window").classList.contains("hidden")
+            if (!settingsVisible) {
+                gameState.paused ? resumeGame() : pauseGame('user')
             }
-
-            if (gameState.paused) {
-                resumeGame(); // resumes and updates icon
-            } else {
-                pauseGame('user'); // pauses and updates icon
-            }
-        });
+        })
     }
-});
+})
 
+// ===================== Utility Functions =====================
+function initializeOverlayTabListeners() {
+    bindOverlayTabs("settings-window", updateSettingsContent)
+    bindOverlayTabs("research-window", updateResearchContent)
+}
 
-  document.getElementById("messagelog-btn").addEventListener("click", () => {
-    const logWindow = document.getElementById("message-log-window");
-    const logContent = document.getElementById("message-log-content");
-  
-    const isVisible = logWindow.classList.contains("visible");
-  
-    if (isVisible) {
-      logWindow.classList.remove("visible");
-    } else {
-      logWindow.classList.add("visible");
-      logContent.scrollTop = logContent.scrollHeight; // scroll to bottom on open
-    }
-  });
-  
-  document.getElementById("close-message-log").addEventListener("click", () => {
-    document.getElementById("message-log-window").classList.remove("visible");
-  });
+function bindOverlayTabs(containerId, updateFn) {
+    document.querySelectorAll(`#${containerId} .overlay-tab:not(.static-tab)`).forEach(button => {
+        if (!button.dataset.bound) {
+            button.addEventListener("click", () => {
+                const tabName = button.dataset.tab
+                tabName ? updateFn(tabName) : console.warn("⚠️ No data-tab on button:", button)
+            })
+            button.dataset.bound = "true"
+        }
+    })
+}
 
+function hideIndexSubmenu() {
+    const indexSubmenu = document.getElementById("index-submenu")
+    const indexArrow = document.getElementById("index-arrow")
+    if (indexSubmenu) indexSubmenu.classList.add("hidden")
+    if (indexArrow) indexArrow.textContent = "▶"
+}
 
-
+// ===================== Exports =====================
 export function selectTower(towerType) {
     gameState.selectedTowerType = towerType
     gameState.selectedObject = null
 }
 
-import { coreTowerPanel } from './commandpanel.js'
 export function selectPlacedTower(tower) {
     gameState.selectedTowerType = null
     gameState.selectedObject = tower
     coreTowerPanel(tower)
+    const infoPanel = document.getElementById("info-panel")
+if (infoPanel) {
+    infoPanel.innerHTML = `
+        <h3 style="margin: 0 0 5px;">${tower.name || "Unnamed Tower"}</h3>
+        <p>This is a placeholder. Tower stats and abilities coming soon!</p>
+    `
+}
 }

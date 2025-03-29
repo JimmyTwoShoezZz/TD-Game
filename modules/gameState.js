@@ -36,8 +36,11 @@ export const gameState = {
   
     // UI and Player Control
     isBuildMode: false,
+    isRepairMode: false,
+    previousSelectedObject: null,
     selectedTowerType: null,
     isDeleteMode: false,
+    isDeleteModeFromTower: false,
     isAttackMode: false,
     isManualTargetAssigned: false,
 }
@@ -98,3 +101,5 @@ export function resumeGame(force = false) {
         updatePauseButtonIcon()
     }
 }
+
+window.gameState = gameState
