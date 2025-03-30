@@ -1,5 +1,5 @@
 import { gameState } from './gameState.js';
-import { playerData } from './playerData.js';
+import { playerData } from '../playerData.js';
 
 export function unlockTower(towerName) {
     if (playerData.isTowerUnlocked(towerName)) {

@@ -3,8 +3,17 @@
 
 // IMPORTS
 
-// Main menu
-import "./menu.js"
+// MAIN MENU
+import "./ui/menu.js"
+
+// CORE
+import { } from "./config.js"
+import { gameState, PHASES, resetGameState, resetInteractionModes, pauseGame, resumeGame, } from "./gameState.js"
+import { selectTower, } from "./handlers.js"
+
+// ENEMIES
+import { Enemy, } from "./enemies/enemyBase.js"
+import { } from "./enemies/pathfinding.js"
 
 // Tower, enemy, and global abilities
 import {
@@ -33,31 +42,7 @@ import {
     repairAllTowers,
     openDeleteTowerMenu,
     updateDeleteMenu,
-} from "./commandpanel.js"
-
-// Game settings
-import {
-
-} from "./config.js"
-
-// Enemies and their mechanics
-import {
-    Enemy
-} from "./enemies.js"
-
-import {
-    gameState,
-    PHASES,
-    resetGameState,
-    resetInteractionModes,
-    pauseGame,
-    resumeGame,
-} from "./gameState.js"
-
-//Handles player actions
-import {
-    selectTower
-} from "./handlers.js"
+} from "./ui/commandpanel.js"
 
 // Images
 import {
@@ -68,16 +53,6 @@ import {
 import {
     renderMap
 } from "./maps.js"
-
-// Game menu
-import {
-    
-} from "./menu.js"
-
-// Enemy pathfinding logic
-import {
-    
-} from "./pathfinding.js"
 
 // Projectiles
 import {

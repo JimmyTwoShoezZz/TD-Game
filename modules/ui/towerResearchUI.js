@@ -1,7 +1,7 @@
-import { playerData } from './playerData.js'
-import { unlockTower } from './research.js'
+import { playerData } from '../playerData.js'
+import { unlockTower } from '../research.js'
 import { gameState } from './gameState.js'
-import { towerConfigs } from './towerConfigs.js'
+import { towerConfigs } from '../towerConfigs.js'
 
 export function initializeTowerResearchUI() {
   const sidebar = document.getElementById("tower-sidebar-buttons");
