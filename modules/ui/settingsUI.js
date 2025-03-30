@@ -23,7 +23,7 @@ export function updateSettingsContent(tabName) {
               <input type="range" id="ui-volume" min="0" max="100" value="60" style="width: 100%;">
             </div>
           </div>`
-      } else {
+    } else {
         content.innerHTML = `<h2>${tabName.charAt(0).toUpperCase() + tabName.slice(1)} Settings</h2><p>Coming soon...</p>`
-      }
+    }
 }

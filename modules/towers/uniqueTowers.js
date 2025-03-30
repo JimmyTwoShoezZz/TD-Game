@@ -1,143 +1,7 @@
-import { applyBuff, removeBuff} from "./buffs.js"
-import { isTileBlocked, tileSize } from './maps.js'
-
-export class Tower {
-    constructor({ id, x, y, name, type, damage, range, attackSpeed, canAttackGround, canAttackAir, health, armor, lastAttackTime, target }) {
-        this.id = id     // Unique ID
-        this.x = x       // Grid x position
-        this.y = y       // Grid y position
-        this.name = name // Display name
-        this.type = type // Keyword
-
-        // Combat properties
-        this.damage = damage
-        this.range = range
-        this.attackSpeed = attackSpeed
-        this.canAttackGround = canAttackGround
-        this.canAttackAir = canAttackAir
-
-        // Tower state
-        this.health = health
-        this.maxhealth = health
-        this.armor = armor
-        this.lastAttackTime = 0
-        this.target = null
-        this.activeBuffs = new Set()
-
-        // Shield-related state
-        this.invulnerable = false   // For UI only
-        this.targetable = true      // Controls whether enemies can target this tower
-    }
-
-    isInRange(enemy) {
-        const dx = enemy.x - this.x
-        const dy = enemy.y - this.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
-        return distance <= this.range
-    }
-
-    canTarget(enemy) {
-        if (!enemy.targetable) return false
-        if (enemy.moveType === "air" && !this.canAttackAir) return false
-        if (enemy.moveType === "ground" && !this.canAttackGround) return false
-        if (this.requiredSize && enemy.size !== this.requiredSize) return false
-        return true
-    }
-
-    update(currentTime, enemies) {
-        if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return 
-        let closestEnemy = null
-        let shortestDistance = this.range
-        for (const enemy of enemies) {
-            if (this.canTarget(enemy)) {
-                const dx = enemy.x - this.x
-                const dy = enemy.y - this.y
-                const distance = Math.sqrt(dx * dx + dy * dy)
-                if (distance < shortestDistance) {
-                    closestEnemy = enemy
-                    shortestDistance = distance
-                }
-            }
-        }
-        if (closestEnemy) {
-            this.attack(closestEnemy)
-            this.lastAttackTime = currentTime
-        }
-    }
-
-    attack(enemy) {
-        enemy.takeDamage(this.damage)
-    }
-
-    takeDamage(amount) {
-        const effectiveDamage = Math.max(0, amount - this.armor)
-        this.health -= effectiveDamage
-        if (this.health <= 0) {
-            this.destroy()
-        }
-    }
-
-    destroy() {
-
-    }
-
-    draw(ctx) {
-        const padding = tileSize * 0.15
-        const size = tileSize - padding * 2
-    
-        const px = this.x * tileSize + padding
-        const py = this.y * tileSize + padding
-        const color = this.getColorByType()
-    
-        // Triangle path
-        ctx.beginPath()
-        ctx.moveTo(px + size / 2, py)         // Top point
-        ctx.lineTo(px + size, py + size)      // Bottom right
-        ctx.lineTo(px, py + size)             // Bottom left
-        ctx.closePath()
-    
-        // Fill
-        ctx.fillStyle = color
-        ctx.fill()
-    
-        // Stroke
-        ctx.lineWidth = 2
-        ctx.strokeStyle = "white"
-        ctx.stroke()
-
-        // Stroke for selected tower
-        if (gameState.selectedObject === this) {
-            ctx.strokeStyle = "lime"
-            ctx.lineWidth = 2
-            ctx.beginPath()
-            ctx.arc(
-                this.x * tileSize + tileSize / 2,
-                this.y * tileSize + tileSize / 2,
-                tileSize * 0.6, 0,
-                Math.PI * 2
-            )
-            ctx.stroke()
-        }
-    }
-        
-
-    getColorByType() {
-        switch (this.type) {
-            case "machineGun": return "gray"
-            case "shotgun": return "brown"
-            case "flamethrower": return "orange"
-            case "artillery": return "green"
-            case "railgun": return "purple"
-            case "corrosion": return "lime"
-            case "shield": return "blue"
-            case "bulldozer": return "black"
-            case "energyCrystal": return "cyan"
-            case "slowing": return "aqua"
-            case "missile": return "red"
-            default: return "white"
-        }
-    }
-}
+import { Tower } from "./towerBase"
+import { drawTriangle, getColorByType } from './towerManager.js'
+import { applyBuff, removeBuff } from '../data/buffs.js'
+import { gameState } from '../core/gameState.js'
 
 export class MachineGunTower extends Tower {
     constructor(x, y) {
@@ -157,6 +21,10 @@ export class MachineGunTower extends Tower {
         lastAttackTime: 0,
         target: null
       })
+    }
+
+    draw(ctx) {
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.name))
     }
 }
 
@@ -179,6 +47,10 @@ export class ShotgunTower extends Tower {
         target: null
       })
         this.pellets = 5
+    }
+
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
     }
 
     update(currentTime, enemies) {
@@ -232,7 +104,11 @@ export class FlamethrowerTower extends Tower {
         this.burnDamage = 1 // per second
         this.coneAngle = Math.PI / 3 // 60 degrees
     }
-  
+
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+
     update(currentTime, enemies) {
         if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
         let primaryTarget = null
@@ -299,6 +175,10 @@ export class BulldozerTower extends Tower {
         this.impactDamage = 8 // bonus damage if enemy can't move
     }
   
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+
     update(currentTime, enemies) {
         if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
         const candidates = enemies.filter(e => this.canTarget(e) && this.isInLine(e))
@@ -361,6 +241,10 @@ export class ArtilleryTower extends Tower {
         this.pendingShots = [] // stores pending shell impacts
     }
   
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+
     update(currentTime, enemies) {
         // Check for delayed explosions first
         this.resolvePendingShots(currentTime)
@@ -434,6 +318,10 @@ export class RailGunTower extends Tower {
         this.moveLimitPerRound = 1
     }
   
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+
     update(currentTime, enemies) {
         this.resolvePendingShots(currentTime)
         if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
@@ -495,6 +383,10 @@ export class CorrosionTower extends Tower {
         this.debuffDuration = 4000 // milliseconds
     }
   
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+
     update(currentTime, enemies) {
         if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
         const targets = enemies.filter(e => this.canTarget(e))
@@ -546,6 +438,10 @@ export class ShieldTower extends Tower {
         this.protectedTowers = [] // towers currently under shield
         this.invulnerable = false  // purely visual
         this.targetable = true     // controls AI logic
+    }
+
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
     }
 
     update(currentTime, enemies) {
@@ -616,6 +512,10 @@ export class EnergyCrystalTower extends Tower {
         this.affectedTowers = new Set()
     }
 
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+
     update(currentTime, enemies) {
         const allTowers = gameState.towers
 
@@ -675,6 +575,10 @@ export class MissileTower extends Tower {
         })
     }
 
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+
     update(currentTime, enemies) {
         if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
 
@@ -717,6 +621,11 @@ export class SlowingTower extends Tower {
             this.stunDuration = 1000 // 1 second stun
             this.splashRadius = 1.5 // slow nearby enemies
     }
+
+    draw(ctx) {
+        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+    }
+    
     update(currentTime, enemies) {
         if (currentTime - this.lastAttackTime < this.attackSpeed * 1000) return
         const validTargets = enemies.filter(e => this.canTarget(e))
@@ -745,27 +654,4 @@ export class SlowingTower extends Tower {
             }
         }
     }    
-}
-
-
-
-
-
-
-  
-import { gameState } from './gameState.js'
-// Handles visual + logical destruction
-export function playTowerDestruction(tower, options = {}) {
-    // TODO: Trigger animation or visual effects here
-    // Example placeholder: tower.playAnimation("explode")
-    removeTower(tower)
-}
-
-// Removes the tower from the game state
-export function removeTower(tower) {
-    const index = gameState.towers.indexOf(tower)
-    if (index !== -1) {
-        gameState.towers.splice(index, 1)
-    }
-    // TODO: Remove from canvas/DOM/etc. if visually represented
 }

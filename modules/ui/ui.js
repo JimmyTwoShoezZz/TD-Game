@@ -1,6 +1,6 @@
-import { playerData } from './playerData.js'
-import { unlockTower } from './research.js'
-import { pauseGame, resumeGame } from './gameState.js'
+import { playerData } from '../core/playerData.js'
+import { unlockTower } from '../data/research.js'
+import { pauseGame, resumeGame, gameState } from '../core/gameState.js'
 import { initializeTowerResearchUI, updateResearchContent } from './towerResearchUI.js'
 import { updateSettingsContent } from './settingsUI.js'
 
@@ -64,8 +64,6 @@ export function showSettingsWindow() {
       setTimeout(() => popup.remove(), 500);
     }, 4000);
   }
-
-  import { gameState } from './gameState.js'
 
   export function updateUIBlockerState() {
     const overlay = document.getElementById("ui-blocker-overlay");

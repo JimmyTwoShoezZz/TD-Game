@@ -10,7 +10,7 @@ import {
     EnergyCrystalTower,
     MissileTower,
     SlowingTower,
-    } from './towers.js'
+    } from '../towers/uniqueTowers.js'
 
 function formatStats(instance, extras = {}) {
     return {

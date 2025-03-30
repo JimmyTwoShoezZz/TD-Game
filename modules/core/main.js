@@ -3,83 +3,48 @@
 
 // IMPORTS
 
-// MAIN MENU
-import "./ui/menu.js"
-
 // CORE
-import { } from "./config.js"
-import { gameState, PHASES, resetGameState, resetInteractionModes, pauseGame, resumeGame, } from "./gameState.js"
-import { selectTower, } from "./handlers.js"
+import { } from './config.js'
+import { gameState, PHASES, resetGameState, resetInteractionModes, pauseGame, resumeGame } from './gameState.js'
+import { selectTower } from './handlers.js'
+import { } from './playerData.js'
+
+// DATA
+import { } from '../data/abilities.js'
+import { } from '../data/buffs.js'
+import { } from '../data/research.js'
 
 // ENEMIES
-import { Enemy, } from "./enemies/enemyBase.js"
-import { } from "./enemies/pathfinding.js"
+import { Enemy } from '../enemies/enemyBase.js'
 
-// Tower, enemy, and global abilities
-import {
+// LOADERS
+import { } from '../loaders/images.js'
+import { } from '../loaders/sounds.js'
 
-} from "./abilities.js"
+// MAPS
+import { renderMap } from '../maps/maps.js'
 
-import {
+// SYSTEMS
+import { } from '../systems/collision.js'
+import { } from '../systems/pathfinding.js'
+import { } from '../systems/projectiles.js'
+import { } from '../systems/statusEffects.js'
 
-} from "./buffs.js"
+// TOWERS
+import { } from '../towers/towerBase.js'
+import { playTowerDestruction, removeTower } from '../towers/towerManager.js'
+import { } from '../towers/uniqueTowers.js'
 
-// Collision detection between enemies and projectiles
-import {
-
-} from "./collision.js"
-
-import {
-    setCommandPanelMode,
-    initializeDefaultMenu,
-    updateCommandPanel,
-    setCommandButton,
-    clearCommandButton,
-    showBuildTowerMenu,
-    openRepairTowerMenu,
-    enterRepairMode,
-    promptRepairAllConfirmation,
-    repairAllTowers,
-    openDeleteTowerMenu,
-    updateDeleteMenu,
-} from "./ui/commandpanel.js"
-
-// Images
-import {
-
-} from "./images.js"
-
-// Maps and generation
-import {
-    renderMap
-} from "./maps.js"
-
-// Projectiles
-import {
-
-} from "./projectiles.js"
-
-// Sounds
-import {
-
-} from "./sounds.js"
-
-// Tooltips
-import {
-
-} from "./tooltips.js"
-
-// Towers and their mechanics
-import {
-    playTowerDestruction,
-    removeTower
-} from "./towers.js"
-
-// UI and Menus
-import {
-    showAlert,
-    logMessage
-} from "./ui.js"
+// UI
+import { setCommandPanelMode, initializeDefaultMenu, updateCommandPanel, setCommandButton, clearCommandButton, showBuildTowerMenu, openRepairTowerMenu, enterRepairMode,
+         promptRepairAllConfirmation, repairAllTowers, openDeleteTowerMenu, updateDeleteMenu
+         } from '../ui/commandpanel.js'
+import '../ui/menu.js' // MAIN MENU
+import { } from '../ui/settingsUI.js'
+import { } from '../ui/tooltips.js'
+import { } from '../ui/towerConfigs.js'
+import { } from '../ui/towerResearchUI.js'
+import { showAlert, logMessage } from '../ui/ui.js'
 
 const canvas = document.getElementById("game-canvas")
 const ctx = canvas.getContext("2d")
@@ -97,14 +62,14 @@ export function startGame() {
 export function initializeGame() {
     renderMap()
     requestAnimationFrame(gameLoop)
-  }
+}
 
 let lastTime = performance.now()
 
 function gameLoop(currentTime) {
     const deltaTime = (currentTime - lastTime) / 1000
     lastTime = currentTime
-    
+
     // === PAUSE CHECK ===
     if (gameState.paused) {
         requestAnimationFrame(gameLoop)
@@ -124,7 +89,7 @@ function gameLoop(currentTime) {
             }
         }
     }
-  
+
     // === RENDER ===
     ctx.clearRect(0, 0, canvas.width, canvas.height)       // Clear the canvas
     renderMap()                                            // Render the map
@@ -133,40 +98,40 @@ function gameLoop(currentTime) {
         if (!enemy.alive) continue
         ctx.beginPath()
         ctx.arc(
-        enemy.x * 50 + 25,
-        enemy.y * 50 + 25,
-        15,
-        0,
-        2 * Math.PI
+            enemy.x * 50 + 25,
+            enemy.y * 50 + 25,
+            15,
+            0,
+            2 * Math.PI
         )
         ctx.fillStyle = enemy.isAir ? '#00BFFF' : '#FF0000'
         ctx.fill()
         ctx.strokeStyle = '#000'
         ctx.stroke()
-        gameState.enemies.push(testEnemy)
     }
+
     requestAnimationFrame(gameLoop)
 }
 
 export function startNextWave() {
-    if (gameState.phase !== PHASES.PLANNING) return;
+    if (gameState.phase !== PHASES.PLANNING) return
 
-    let countdown = 5;
-    showAlert(`Wave begins in ${countdown}...`, "warning", "large");
+    let countdown = 5
+    showAlert(`Wave begins in ${countdown}...`, "warning", "large")
 
     const countdownInterval = setInterval(() => {
-        countdown--;
+        countdown--
 
         if (countdown > 0) {
-            showAlert(`Wave begins in ${countdown}...`, "warning", "large");
+            showAlert(`Wave begins in ${countdown}...`, "warning", "large")
         } else {
-            clearInterval(countdownInterval);
-            showAlert(`Wave ${gameState.currentWave + 1} has started!`, "danger", "large", 3000);
+            clearInterval(countdownInterval)
+            showAlert(`Wave ${gameState.currentWave + 1} has started!`, "danger", "large", 3000)
 
-            gameState.phase = PHASES.WAVE;
-            gameState.currentWave += 1;
-            gameState.wavesRemaining -= 1;
-            initializeDefaultMenu();
+            gameState.phase = PHASES.WAVE
+            gameState.currentWave += 1
+            gameState.wavesRemaining -= 1
+            initializeDefaultMenu()
         }
-    }, 1000);
+    }, 1000)
 }

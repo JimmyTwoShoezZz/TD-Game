@@ -1,9 +1,9 @@
-import { gameState, resetInteractionModes } from './gameState.js'
-import { playerData } from './playerData.js'
-import { playTowerDestruction, removeTower } from './towers.js'
-import { selectTower } from './handlers.js'
-import { startNextWave } from './main.js'
-import { showResearchWindow } from './ui.js'
+import { gameState, resetInteractionModes } from './core/gameState.js'
+import { playerData } from './core/playerData.js'
+import { playTowerDestruction, removeTower } from './towers/towerManager.js'
+import { selectTower } from './core/handlers.js'
+import { startNextWave } from './core/main.js'
+import { showResearchWindow, showAlert } from './ui.js'
 import { towerConfigs } from './towerConfigs.js'
 
 export function setCommandPanelMode(mode) {
@@ -381,8 +381,8 @@ function confirmDeleteTower() {
 export function openGlobalUpgradesMenu() {
     setCommandPanelMode('default')
     updateCommandPanel([
-        { id: "btn-1", label: "Armor Upgrade: Bullets & Explosives", action: upgradeArmorBullets },
-        { id: "btn-2", label: "Armor Upgrade: Biological", action: upgradeArmorBiological },
+        { id: "btn-1", label: "Armor Upgrade: Bullets & Explosives", action: null },
+        { id: "btn-2", label: "Armor Upgrade: Biological", action: null },
         { id: "btn-3", label: "", action: null },
         { id: "btn-4", label: "", action: null },
         { id: "btn-5", label: "", action: null },
@@ -394,14 +394,6 @@ export function openGlobalUpgradesMenu() {
         { id: "btn-11", label: "", action: null },
         { id: "btn-12", label: "Close Menu", action: initializeDefaultMenu }
     ])
-}
-
-function upgradeArmorBullets() {
-    console.log("🔧 Upgrading armor vs bullets/explosives");
-}
-
-function upgradeArmorBiological() {
-    console.log("🔧 Upgrading armor vs biological attacks");
 }
 
 export function coreTowerPanel(tower) {

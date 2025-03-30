@@ -1,4 +1,4 @@
-import { updateUIBlockerState, updatePauseButtonIcon } from './ui.js'
+import { updateUIBlockerState, updatePauseButtonIcon } from '../ui/ui.js'
 
 export const PHASES = {
     PLANNING: 'planning',
@@ -47,12 +47,12 @@ export const gameState = {
   
 // Resets all player interaction modes (build, delete, attack, selection)
 export function resetInteractionModes() {
-    gameState.isBuildMode = false;
-    gameState.isDeleteMode = false;
-    gameState.isAttackMode = false;
-    gameState.selectedObject = null;
+    gameState.isBuildMode = false
+    gameState.isDeleteMode = false
+    gameState.isAttackMode = false
+    gameState.selectedObject = null
 }
-// Resets the entire gameState
+
 export function resetGameState() {
     gameState.phase = PHASES.PLANNING
     gameState.currentWave = 0

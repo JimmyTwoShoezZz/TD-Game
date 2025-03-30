@@ -1,10 +1,9 @@
-// ===================== Imports =====================
-import { showSettingsWindow, hideSettingsWindow, hideResearchWindow } from "./ui.js"
-import { updateResearchContent } from "./towerResearchUI.js"
-import { updateSettingsContent } from "./settingsUI.js"
-import { initializeDefaultMenu, updateDeleteMenu, coreTowerPanel, updateRepairMenu } from "./commandpanel.js"
-import { gameState, pauseGame, resumeGame } from "./gameState.js"
-import { tileSize, isTileBuildable } from "./maps.js"
+import { showSettingsWindow, hideSettingsWindow, hideResearchWindow } from '../ui/ui.js'
+import { updateResearchContent } from '../ui/towerResearchUI.js'
+import { updateSettingsContent } from '../ui/settingsUI.js'
+import { initializeDefaultMenu, updateDeleteMenu, coreTowerPanel, updateRepairMenu } from '../ui/commandpanel.js'
+import { gameState, pauseGame, resumeGame } from './gameState.js'
+import { tileSize, isTileBuildable } from '../maps/maps.js'
 
 // ===================== Canvas Click =====================
 const canvas = document.getElementById("game-canvas")
@@ -28,7 +27,6 @@ export function handleCanvasClick(event) {
             const TowerClass = gameState.selectedTowerType
             const newTower = new TowerClass(tileX, tileY)
             gameState.towers.push(newTower)
-            //gameState.selectedObject = newTower
         } else {
             console.log("🚫 Can't build here.")
         }
@@ -45,7 +43,7 @@ export function handleCanvasClick(event) {
         } else if (gameState.isRepairMode) {
             const missingHealth = clickedTower.maxHealth - clickedTower.health
             const costToRepair = Math.ceil(missingHealth * 0.5)
-        
+
             if (missingHealth > 0 && gameState.minerals >= costToRepair) {
                 clickedTower.health = clickedTower.maxHealth
                 gameState.minerals -= costToRepair
@@ -53,8 +51,7 @@ export function handleCanvasClick(event) {
             } else {
                 console.log("🚫 Cannot repair — full health or not enough minerals")
             }
-        
-            // Don't select the tower, don't exit repair mode
+
             return
         } else {
             selectPlacedTower(clickedTower)
@@ -79,7 +76,6 @@ document.getElementById("close-settings").addEventListener("click", () => {
     hideIndexSubmenu()
 })
 
-// ESC key closes settings
 document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
         const settingsWindow = document.getElementById("settings-window")
@@ -167,10 +163,10 @@ export function selectPlacedTower(tower) {
     gameState.selectedObject = tower
     coreTowerPanel(tower)
     const infoPanel = document.getElementById("info-panel")
-if (infoPanel) {
-    infoPanel.innerHTML = `
-        <h3 style="margin: 0 0 5px;">${tower.name || "Unnamed Tower"}</h3>
-        <p>This is a placeholder. Tower stats and abilities coming soon!</p>
-    `
-}
+    if (infoPanel) {
+        infoPanel.innerHTML = `
+            <h3 style="margin: 0 0 5px;">${tower.name || "Unnamed Tower"}</h3>
+            <p>This is a placeholder. Tower stats and abilities coming soon!</p>
+        `
+    }
 }
