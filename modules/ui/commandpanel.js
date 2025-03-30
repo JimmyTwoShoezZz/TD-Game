@@ -1,10 +1,10 @@
-import { gameState, resetInteractionModes } from './core/gameState.js'
-import { playerData } from './core/playerData.js'
-import { playTowerDestruction, removeTower } from './towers/towerManager.js'
-import { selectTower } from './core/handlers.js'
-import { startNextWave } from './core/main.js'
+import { gameState, resetInteractionModes } from '../core/gameState.js'
+import { playerData } from '../core/playerData.js'
+import { playTowerDestruction, removeTower } from '../towers/towerManager.js'
+import { selectTower } from '../core/handlers.js'
+import { startNextWave } from '../core/main.js'
 import { showResearchWindow, showAlert } from './ui.js'
-import { towerConfigs } from './towerConfigs.js'
+import { towerConfigs } from '../ui/towerConfigs.js'
 
 export function setCommandPanelMode(mode) {
     resetInteractionModes()
@@ -285,7 +285,6 @@ export function updateRepairMenu() {
                 tower.health = tower.maxHealth
                 gameState.minerals -= costToRepair
             } else {
-                console.log("🚫 Not enough minerals to repair.")
                 // (Optional: display message in info panel)
             }
 

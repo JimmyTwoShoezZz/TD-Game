@@ -1,19 +1,23 @@
-import { drawTriangle, getColorByType } from "./towerManager"
+import { drawTriangle, getColorByType } from "./towerManager.js"
 
 export class Tower {
-    constructor(x, y) {
-        this.x = x
-        this.y = y
-        this.name = "Base Tower"
-        this.attackSpeed = 1
-        this.range = 3
-        this.damage = 1
+    constructor(config = {}) {
+        this.id = config.id || crypto.randomUUID()
+        this.name = config.name || "Base Tower"
+        this.type = config.type || "base"
+        this.x = config.x
+        this.y = config.y
+        this.health = config.health ?? 100
+        this.armor = config.armor ?? 1
+        this.damage = config.damage ?? 1
+        this.range = config.range ?? 3
+        this.attackSpeed = config.attackSpeed ?? 1
+        this.canAttackAir = config.canAttackAir ?? true
+        this.canAttackGround = config.canAttackGround ?? true
         this.target = null
         this.lastAttackTime = 0
         this.targetable = true
-        this.maxHealth = 100
-        this.health = this.maxHealth
-        this.armor = 1
+        this.maxHealth = this.health
     }
 
     isInRange(enemy) {
@@ -65,9 +69,5 @@ export class Tower {
         this.health = 0
         this.targetable = false
         // Play destruction visuals or sounds externally
-    }
-
-    draw(ctx) {
-        drawTriangle(ctx, this.x, this.y, getColorByType(this.name))
     }
 }

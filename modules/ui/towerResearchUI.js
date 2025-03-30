@@ -1,6 +1,6 @@
 import { playerData } from '../core/playerData.js'
 import { unlockTower } from '../data/research.js'
-import { gameState } from './core/gameState.js'
+import { gameState } from '../core/gameState.js'
 import { towerConfigs } from './towerConfigs.js'
 
 export function initializeTowerResearchUI() {

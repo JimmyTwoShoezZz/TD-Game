@@ -28,7 +28,7 @@ export function handleCanvasClick(event) {
             const newTower = new TowerClass(tileX, tileY)
             gameState.towers.push(newTower)
         } else {
-            console.log("🚫 Can't build here.")
+            // display alert message
         }
         return
     }
@@ -39,7 +39,6 @@ export function handleCanvasClick(event) {
         if (gameState.isDeleteMode) {
             gameState.selectedObject = clickedTower
             updateDeleteMenu()
-            console.log("Clicked a tower in delete mode:", clickedTower)
         } else if (gameState.isRepairMode) {
             const missingHealth = clickedTower.maxHealth - clickedTower.health
             const costToRepair = Math.ceil(missingHealth * 0.5)
@@ -47,9 +46,8 @@ export function handleCanvasClick(event) {
             if (missingHealth > 0 && gameState.minerals >= costToRepair) {
                 clickedTower.health = clickedTower.maxHealth
                 gameState.minerals -= costToRepair
-                console.log(`🛠️ Repaired ${clickedTower.name} for ${costToRepair} minerals`)
             } else {
-                console.log("🚫 Cannot repair — full health or not enough minerals")
+                // display alert message
             }
 
             return

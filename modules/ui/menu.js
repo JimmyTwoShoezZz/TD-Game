@@ -1,4 +1,4 @@
-import { startGame } from './core/main.js'
+import { startGame } from '../core/main.js'
 
 window.addEventListener("DOMContentLoaded", () => {
     const startButton = document.getElementById("start-game-btn")

@@ -1,4 +1,4 @@
-import { Tower } from "./towerBase"
+import { Tower } from "./towerBase.js"
 import { drawTriangle, getColorByType } from './towerManager.js'
 import { applyBuff, removeBuff } from '../data/buffs.js'
 import { gameState } from '../core/gameState.js'
@@ -24,7 +24,7 @@ export class MachineGunTower extends Tower {
     }
 
     draw(ctx) {
-        drawTriangle(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 }
 
@@ -50,7 +50,7 @@ export class ShotgunTower extends Tower {
     }
 
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -106,7 +106,7 @@ export class FlamethrowerTower extends Tower {
     }
 
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -176,7 +176,7 @@ export class BulldozerTower extends Tower {
     }
   
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -203,11 +203,9 @@ export class BulldozerTower extends Tower {
                 const isBlocked = !this.canPushTo(pushX, enemy.y, allEnemies)
                 if (isBlocked) {
                     enemy.takeDamage(this.damage + this.impactDamage)
-                    console.log(`💥 ${enemy.name} slams into an obstacle!`)
                 } else {
                 enemy.takeDamage(this.damage)
                 enemy.x = pushX
-                console.log(`🚜 ${enemy.name} pushed to (${enemy.x}, ${enemy.y})`)
                 }
             }
         }
@@ -242,7 +240,7 @@ export class ArtilleryTower extends Tower {
     }
   
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -257,7 +255,6 @@ export class ArtilleryTower extends Tower {
     }
   
     fireProjectile(currentTime, target, enemies) {
-        console.log(`🚀 Artillery shell launched at (${target.x}, ${target.y})`)
         this.pendingShots.push({
             impactTime: currentTime + this.projectileDelay,
             targetX: target.x,
@@ -270,7 +267,6 @@ export class ArtilleryTower extends Tower {
         const toExplode = this.pendingShots.filter(p => currentTime >= p.impactTime)
         this.pendingShots = this.pendingShots.filter(p => currentTime < p.impactTime)
         for (const shot of toExplode) {
-            console.log(`💥 Artillery shell explodes at (${shot.targetX}, ${shot.targetY})`)
             for (const enemy of shot.snapshot) {
                 if (!enemy || !this.canTarget(enemy)) continue
                 const dx = enemy.x - shot.targetX
@@ -278,13 +274,11 @@ export class ArtilleryTower extends Tower {
                 const dist = Math.sqrt(dx * dx + dy * dy)
                 if (dist === 0) {
                     enemy.takeDamage(this.damage)
-                    console.log(`🔥 Direct hit on ${enemy.name}`)
                 } else if (dist <= this.splashRadius) {
                     const falloffFactor = 1 - (dist / this.splashRadius)
                     const scaledSplash = Math.floor(this.damage * 0.9 * falloffFactor)
                     if (scaledSplash > 0) {
                         enemy.takeDamage(scaledSplash)
-                        console.log(`💨 Splash hit on ${enemy.name} for ${scaledSplash}`)
                     }
                 }
             }
@@ -319,7 +313,7 @@ export class RailGunTower extends Tower {
     }
   
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -341,7 +335,6 @@ export class RailGunTower extends Tower {
     }
   
     fireProjectile(currentTime, target) {
-        console.log(`⚡ Charging Rail Gun shot at ${target.name} (${target.x}, ${target.y})`)
         this.pendingShots.push({
             impactTime: currentTime + this.chargeupTime,
             target: target
@@ -355,7 +348,6 @@ export class RailGunTower extends Tower {
             const { target } = shot
             if (!target || target.health <= 0) continue
             target.takeDamage(this.damage, { ignoreArmor: this.ignoresArmor })
-            console.log(`💥 Rail Gun impacts ${target.name} for ${this.damage} damage!`)
         }
     }
 }
@@ -384,7 +376,7 @@ export class CorrosionTower extends Tower {
     }
   
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -401,7 +393,6 @@ export class CorrosionTower extends Tower {
     }
   
     attack(primary, allEnemies) {
-        console.log(`🧪 Corrosion blast at (${primary.x}, ${primary.y})`)
         for (const enemy of allEnemies) {
             if (!enemy || !this.canTarget(enemy)) continue
             const dx = enemy.x - primary.x
@@ -441,7 +432,7 @@ export class ShieldTower extends Tower {
     }
 
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -481,7 +472,6 @@ export class ShieldTower extends Tower {
 
     destroy() {
         // When destroyed, remove itself from game
-        console.log("🛑 Shield Tower destroyed, shield dropped!")
         playTowerDestruction(this)
     }
 }
@@ -513,7 +503,7 @@ export class EnergyCrystalTower extends Tower {
     }
 
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -550,7 +540,6 @@ export class EnergyCrystalTower extends Tower {
             this.removeBuff(tower)
         }
         this.affectedTowers.clear()
-        console.log("✨ Energy Crystal Tower destroyed, buffs removed.")
         playTowerDestruction(this)
     }
 }
@@ -576,7 +565,7 @@ export class MissileTower extends Tower {
     }
 
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
 
     update(currentTime, enemies) {
@@ -588,8 +577,6 @@ export class MissileTower extends Tower {
         const target = validTargets[0]
         this.attack(target)
         this.lastAttackTime = currentTime
-
-        console.log(`🎯 Missile launched at ${target.name}!`)
     }
 
     attack(enemy) {
@@ -623,7 +610,7 @@ export class SlowingTower extends Tower {
     }
 
     draw(ctx) {
-        drawBasicTriangleTower(ctx, this.x, this.y, getColorByType(this.name))
+        drawTriangle(ctx, this.x, this.y, getColorByType(this.type))
     }
     
     update(currentTime, enemies) {
@@ -633,7 +620,6 @@ export class SlowingTower extends Tower {
         const target = validTargets[0]
         this.shatterImpact(currentTime, target, enemies)
         this.lastAttackTime = currentTime
-        console.log(`💥 Slowing Tower hits ${target.name} with ice ball!`)
     }
     
     shatterImpact(currentTime, mainTarget, allEnemies) {
@@ -650,7 +636,6 @@ export class SlowingTower extends Tower {
             const dist = Math.sqrt(dx * dx + dy * dy)
             if (dist <= this.splashRadius) {
                 enemy.applySlow(this.slowAmount, this.slowDuration)
-                console.log(`💦 Splash slow applied to ${enemy.name}`)
             }
         }
     }    
