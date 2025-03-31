@@ -363,17 +363,17 @@ export function updateDeleteMenu() {
 
 
 function confirmDeleteTower() {
-    const tower = gameState.selectedObject
-    if (!tower || !gameState.towers.includes(tower)) return
+    const tower = gameState.selectedObject;
+    if (!tower || !gameState.towers.includes(tower)) return;
 
-    playTowerDestruction(tower, { isManual: true })
-    gameState.selectedObject = null
+    removeTower(tower, { isManual: true });
+    gameState.selectedObject = null;
 
     if (gameState.isDeleteModeFromTower) {
-        gameState.isDeleteModeFromTower = false  // reset it
-        initializeDefaultMenu()
+        gameState.isDeleteModeFromTower = false;
+        initializeDefaultMenu();
     } else {
-        updateDeleteMenu()
+        updateDeleteMenu();
     }
 }
 

@@ -1,4 +1,4 @@
-import { drawTriangle, getColorByType } from "./towerManager.js"
+import { drawTriangle, getColorByType, removeTower } from "./towerManager.js"
 
 export class Tower {
     constructor(config = {}) {
@@ -65,9 +65,7 @@ export class Tower {
         }
     }
 
-    destroy() {
-        this.health = 0
-        this.targetable = false
-        // Play destruction visuals or sounds externally
+    destroy({ isManual = false } = {}) {
+        removeTower(this, { isManual })
     }
 }

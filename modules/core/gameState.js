@@ -8,81 +8,84 @@ export const PHASES = {
 }
   
 export const gameState = {
-    // Game Phase Tracking
-    phase: PHASES.PLANNING,
-    currentWave: 0,
-    totalWaves: 0,
-    wavesRemaining: 0,
-    isGamePaused: false,
-    isGameOver: false,
-    isVictory: false,
-  
-    // Timer
-    totalTimeElapsed: 0,
-    currentWaveTime: 0,
-  
-    // Player Resources
-    minerals: 0,
-    powerCrystals: 0,
-    towerResearchPoints: 0,
-  
-    // Tower & Enemy Tracking
+    // ========== Map & Stage Info ==========
+    currentStage: {
+        grid: [],
+        tileset: {},
+        checkpoints: [],
+        terrainBlockerGrid: [],
+        blockerTypes: {},
+        shortcutTriggers: [],
+    },
+
+    enemyPath: [], // Auto-generated each wave
+
+    // ========== Units ==========
     towers: [],
     enemies: [],
     bosses: [],
-    enemiesRemaining: [],
-    enemiesKilled: [],
+
+    // ========== Resources ==========
+    minerals: 0,
+    powerCrystals: 0,
+    towerResearchPoints: 0,
+
+    // ========== State & UI ==========
     selectedObject: null,
-  
-    // UI and Player Control
+    selectedTowerType: null,
+
     isBuildMode: false,
     isRepairMode: false,
-    previousSelectedObject: null,
-    selectedTowerType: null,
     isDeleteMode: false,
-    isDeleteModeFromTower: false,
-    isAttackMode: false,
-    isManualTargetAssigned: false,
-}
-  
-// Resets all player interaction modes (build, delete, attack, selection)
-export function resetInteractionModes() {
-    gameState.isBuildMode = false
-    gameState.isDeleteMode = false
-    gameState.isAttackMode = false
-    gameState.selectedObject = null
+    isAttacking: false,
+
+    // ========== Combat & Waves ==========
+    phase: "build", // or "wave"
+    currentWave: 0,
+    isWaveActive: false,
+
+    // ========== Flags & Other ==========
+    manualTarget: null, // used for manually assigned attack targets
+    customFlags: {}, // used for custom shortcut triggers
 }
 
 export function resetGameState() {
-    gameState.phase = PHASES.PLANNING
-    gameState.currentWave = 0
-    gameState.totalWaves = 0
-    gameState.wavesRemaining = 0
-    gameState.isGamePaused = false
-    gameState.isGameOver = false
-    gameState.isVictory = false
-  
-    gameState.totalTimeElapsed = 0
-    gameState.currentWaveTime = 0
-  
-    gameState.minerals = 0
-    gameState.powerCrystals = 0
-    gameState.towerResearchPoints = 0
-  
     gameState.towers = []
     gameState.enemies = []
     gameState.bosses = []
-    gameState.enemiesRemaining = []
-    gameState.enemiesKilled = []
     gameState.selectedObject = null
-  
-    gameState.isBuildMode = false
     gameState.selectedTowerType = null
-    gameState.isDeleteMode = false
-    gameState.isAttackMode = false
-    gameState.isManualTargetAssigned = false
-    gameState.commandPanelMode = 'default'
+
+    gameState.minerals = 0
+    gameState.powerCrystals = 0
+    gameState.towerResearchPoints = 0
+
+    gameState.phase = "build"
+    gameState.currentWave = 0
+    gameState.isWaveActive = false
+
+    gameState.enemyPath = []
+    gameState.manualTarget = null
+    gameState.customFlags = {}
+
+    gameState.currentStage = {
+        grid: [],
+        tileset: {},
+        checkpoints: [],
+        terrainBlockerGrid: [],
+        blockerTypes: {},
+        shortcutTriggers: [],
+    }
 }
+
+export function resetInteractionModes() {
+    gameState.isBuildMode = false
+    gameState.isRepairMode = false
+    gameState.isDeleteMode = false
+    gameState.isAttacking = false
+}
+
+export default gameState
 
 export function pauseGame(reason = 'user') {
     if (!gameState.paused) {

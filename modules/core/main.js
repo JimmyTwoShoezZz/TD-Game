@@ -22,7 +22,8 @@ import { } from '../loaders/images.js'
 import { } from '../loaders/sounds.js'
 
 // MAPS
-import { renderMap } from '../maps/maps.js'
+import { renderMap, loadStage } from '../maps/maps.js'
+import { PLANET1 } from '../maps/planet1.js'
 
 // SYSTEMS
 import { } from '../systems/collision.js'
@@ -57,10 +58,10 @@ export function startGame() {
     resetGameState()
     resetInteractionModes()
     initializeDefaultMenu()
+    loadStage(PLANET1, 0)
 }
 
 export function initializeGame() {
-    renderMap()
     requestAnimationFrame(gameLoop)
 }
 

@@ -1,15 +1,23 @@
 import { gameState } from '../core/gameState.js'
 
-export function playTowerDestruction(tower) {
-    // Placeholder for animation, sound, or visual effects
+export function removeTower(tower, { isManual = false } = {}) {
+    const index = gameState.towers.indexOf(tower);
+    if (index !== -1) {
+        gameState.towers.splice(index, 1);
+        playTowerDestruction(tower);
+
+        if (isManual) {
+            // 🚩 TODO: Add refund logic here (Minerals, Energy Crystals, etc.)
+            console.log(`Tower manually deleted: ${tower.name}`);
+        } else {
+            console.log(`Tower destroyed by enemies: ${tower.name}`);
+            // enemy-destruction logic here
+        }
+    }
 }
 
-export function removeTower(tower) {
-    const index = gameState.towers.indexOf(tower)
-    if (index !== -1) {
-        gameState.towers.splice(index, 1)
-        playTowerDestruction(tower)
-    }
+export function playTowerDestruction(tower) {
+    // Actual animation and effects logic go here
 }
 
 export function getColorByType(towerType) {

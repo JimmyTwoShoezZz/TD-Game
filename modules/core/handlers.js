@@ -3,7 +3,7 @@ import { updateResearchContent } from '../ui/towerResearchUI.js'
 import { updateSettingsContent } from '../ui/settingsUI.js'
 import { initializeDefaultMenu, updateDeleteMenu, coreTowerPanel, updateRepairMenu } from '../ui/commandpanel.js'
 import { gameState, pauseGame, resumeGame } from './gameState.js'
-import { tileSize, isTileBuildable } from '../maps/maps.js'
+import { tileSize, activateNodeAt, canBuildHere } from '../maps/maps.js'
 
 // ===================== Canvas Click =====================
 const canvas = document.getElementById("game-canvas")
@@ -18,15 +18,21 @@ export function handleCanvasClick(event) {
     const tileX = Math.floor(mouseX / tileSize)
     const tileY = Math.floor(mouseY / tileSize)
 
+    const blockerId = gameState.currentStage.terrainBlockerGrid[tileY]?.[tileX] || 0
+    const blocker = gameState.currentStage.blockerTypes?.[blockerId]
+
     // === BUILD MODE ===
     if (gameState.isBuildMode && gameState.selectedTowerType) {
         const isOccupied = gameState.towers.some(t => t.x === tileX && t.y === tileY)
-        const canBuildHere = isTileBuildable(tileX, tileY) && !isOccupied
+        const isValidBuild = canBuildHere(tileX, tileY, gameState.selectedTowerType) && !isOccupied
 
-        if (canBuildHere) {
+        if (isValidBuild) {
             const TowerClass = gameState.selectedTowerType
             const newTower = new TowerClass(tileX, tileY)
             gameState.towers.push(newTower)
+        } else if (blocker?.interactable) {
+            // 👇 Activate blocker node instead of placing a tower
+            activateNodeAt(tileX, tileY)
         } else {
             // display alert message
         }
@@ -49,13 +55,14 @@ export function handleCanvasClick(event) {
             } else {
                 // display alert message
             }
-
             return
         } else {
             selectPlacedTower(clickedTower)
         }
         return
     }
+
+    // Optional: handle terrain blocker selection for future menus
 }
 
 // ===================== UI Event Listeners =====================

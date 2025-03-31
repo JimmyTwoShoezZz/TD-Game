@@ -1,8 +1,8 @@
 import { StatusEffectManager } from "../systems/statusEffects.js"
+import { gameState } from "../core/gameState.js"
 
 export class Enemy {
     constructor({ id, x, y, name, moveType, bioType, species, size, path = [], damage, range, attackSpeed, health, armor, speed }) {
-        // Information properties
         this.id = id
         this.x = x
         this.y = y
@@ -12,7 +12,6 @@ export class Enemy {
         this.species = species.toLowerCase()
         this.size = size.toLowerCase()
 
-        // Traits array for flexible filtering
         this.traits = [
             this.species,
             this.bioType,
@@ -24,19 +23,16 @@ export class Enemy {
         this.path = path
         this.currentPathIndex = 0
 
-        // Combat properties
         this.damage = damage
         this.range = range
         this.attackSpeed = attackSpeed
 
-        // Enemy state
         this.health = health
         this.armor = armor
         this.speed = speed
         this.lastAttackTime = 0
         this.target = null
 
-        // Status effects
         this.status = new StatusEffectManager(this)
     }
 
@@ -82,7 +78,7 @@ export class Enemy {
     }
 
     attack(currentTime) {
-        if (!this.target || !this.targetable) return
+        if (!this.target || !this.target.targetable) return
 
         const dx = this.target.x - this.x
         const dy = this.target.y - this.y
@@ -108,7 +104,17 @@ export class Enemy {
         }
     }
 
-    die() {
+    destroy() {
+        if (!this.alive) return
+
         this.alive = false
+
+        // 🚩 TODO: Add enemy death animation, drops, resources, scoring logic here
+        console.log(`Enemy destroyed: ${this.name}`)
+
+        const index = gameState.enemies.indexOf(this)
+        if (index !== -1) {
+            gameState.enemies.splice(index, 1)
+        }
     }
 }
