@@ -1,0 +1,146 @@
+.overlay-window {
+    overflow: hidden;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 500px;
+    background-color: rgba(30, 30, 30, 0.85);
+    border: 2px solid #888;
+    display: flex;
+    z-index: 1000;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    color: white;
+  }
+  
+  .overlay-window.hidden {
+    display: none;
+  }
+  
+  .overlay-sidebar {
+    width: 200px;
+    background-color: #2c2c2cd3;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+    border-right: 1px solid #444;
+    overflow-y: auto;         /* 👈 Always show scrollbar */
+    overflow-x: hidden;
+    max-height: 100%;
+    box-sizing: border-box;
+    scrollbar-width: thin;      /* Firefox: smaller scrollbar */
+    scrollbar-color: #555 #2c2c2c; /* Firefox: visible thumb & track */
+  }  
+  
+  .overlay-sidebar::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .overlay-sidebar::-webkit-scrollbar-track {
+    background: #2c2c2c;
+  }
+  
+  .overlay-sidebar::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 5px;
+  }
+  
+  .overlay-sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
+  }
+
+  .overlay-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #2c2c2c;
+  }
+  
+  .submenu {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    gap: 5px;
+  }
+  
+  .submenu.hidden {
+    display: none;
+  }
+  
+  .submenu.overlay-tab {
+    font-size: 0.9em;
+    background-color: #333;
+  }
+
+  .static-tab {
+    margin-top: auto;
+  }
+
+  .arrow {
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .overlay-tab,
+  .close-overlay {
+    background-color: #444;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: left;
+  }
+  
+  .overlay-tab:hover,
+  .close-overlay:hover {
+    background-color: #666;
+  }
+  
+  .overlay-content {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+  }
+
+  .overlay-content::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .overlay-content::-webkit-scrollbar-track {
+    background: #2c2c2c;
+    border-radius: 5px;
+  }
+  
+  .overlay-content::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+  }
+  
+  .overlay-content::-webkit-scrollbar-thumb:hover {
+    background: #777;
+  }
+
+  .overlay-close-button {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #aaa;
+    z-index: 1001;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .overlay-close-button:hover {
+    color: white;
+    background-color: #444;
+  }

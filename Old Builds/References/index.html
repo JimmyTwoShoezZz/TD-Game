@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Defense Game</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div id="title-screen">
+        <h1>Your Game Title</h1>
+        <button id="start-game-btn">Start Game</button>
+    </div>
+      
+
+    <div id="main-game" class="hidden">
+
+    <div id="top-bar">
+        <span id="resources">💎 1000 Minerals | ⚡ 500 Power Crystals | 🏗️ 10 Research Points</span>
+        <span id="wave-info">Wave: 1/20 | Enemies: 10 | Timer: 00:00</span>
+        <span id="buttons">
+            <button id="pause-btn">Pause</button>
+            <button id="messagelog-btn">Message Log</button>
+            <button id="options-btn">Options</button>
+        </span>
+    </div>
+
+    <div id="settings-window" class="overlay-window hidden">
+        <div class="overlay-close-button" id="close-settings">×</div>
+        <div class="overlay-sidebar">
+            <button class="overlay-tab" data-tab="volume">Volume</button>
+            <button class="overlay-tab" data-tab="leaderboard">Leaderboard</button>
+            <button class="overlay-tab" data-tab="rules">Rules</button>
+            <button class="overlay-tab" data-tab="index" id="index-button"><span class="arrow" id="index-arrow">▶</span> Index</button>
+            <div id="index-submenu" class="submenu hidden">
+                <button class="overlay-tab" data-tab="towers">Towers</button>
+                <button class="overlay-tab" data-tab="enemies">Enemies</button>
+                <button class="overlay-tab" data-tab="planets">Planets</button>
+                <button class="overlay-tab" data-tab="bosses">Bosses</button>
+            </div>
+            <button class="overlay-tab" data-tab="credits">Credits</button>
+        </div>
+        <div class="overlay-content" id="settings-content">
+            <div class="overlay-placeholder">Select a setting from the sidebar.</div>
+        </div>
+    </div>
+
+    <div id="research-window" class="overlay-window hidden">
+        <div class="overlay-close-button" id="close-research">×</div>
+        <div class="overlay-sidebar" id="tower-sidebar">
+            <!-- JS will inject tower buttons here directly -->
+        </div>
+      
+        <div class="overlay-content" id="research-content">
+          <div class="overlay-placeholder">Select a tower from the sidebar.</div>
+        </div>
+      </div>      
+
+      <div id="message-log-window">
+        <div id="message-log-header">
+          <h2>Message Log</h2>
+          <button id="close-message-log">✖️</button>
+        </div>
+        <div id="message-log-content">
+          <p>System initialized.</p>
+        </div>
+      </div>
+      <div id="message-popups-container"></div>
+
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="alert" class="top-ui"></div>
+    </div>
+
+    <div id="bottom-ui">
+        <div id="minimap-container">
+            <div id="minimap"></div>
+        </div>
+
+        <div id="info-panel-container">
+            <div id="info-panel">
+                <p>Select an object for details.</p>
+            </div>
+        </div>
+
+        <div id="command-panel">
+            <div class="command-grid">
+                <div class="command-button" id="btn-1"></div>
+                <div class="command-button" id="btn-2"></div>
+                <div class="command-button" id="btn-3"></div>
+                <div class="command-button" id="btn-4"></div>
+        
+                <div class="command-button" id="btn-5"></div>
+                <div class="command-button" id="btn-6"></div>
+                <div class="command-button" id="btn-7"></div>
+                <div class="command-button" id="btn-8"></div>
+        
+                <div class="command-button" id="btn-9"></div>
+                <div class="command-button" id="btn-10"></div>
+                <div class="command-button" id="btn-11"></div>
+                <div class="command-button" id="btn-12"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="ui-blocker-overlay" class="hidden"></div>
+
+    <script type="module" src="modules/core/main.js"></script>
+</body>
+</html>

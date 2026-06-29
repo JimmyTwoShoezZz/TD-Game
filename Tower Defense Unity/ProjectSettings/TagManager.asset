@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 412171047
+    locked: 0
+  - name: Liquid
+    uniqueID: 3184652391
+    locked: 0
+  - name: Path
+    uniqueID: 1576336091
+    locked: 0
+  - name: MapObjects
+    uniqueID: 2145933131
+    locked: 0
+  - name: Towers
+    uniqueID: 4102446081
+    locked: 0
+  - name: Units
+    uniqueID: 1518360411
+    locked: 0
+  - name: Projectiles
+    uniqueID: 2664850881
+    locked: 0
+  - name: UI
+    uniqueID: 1424694463
+    locked: 0
+  m_RenderingLayers:
+  - Default
